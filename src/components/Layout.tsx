@@ -1,0 +1,276 @@
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Menu, 
+  X, 
+  Facebook, 
+  Instagram, 
+  Phone, 
+  MessageSquare, 
+  ChevronRight, 
+  Search, 
+  Send,
+  ShoppingBag,
+  Settings
+} from 'lucide-react';
+import FloatingWhatsApp from './FloatingWhatsApp';
+import { useCart } from '../CartContext';
+
+export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const location = useLocation();
+  const { totalItems } = useCart();
+
+  const navLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Reseller হন', path: '/reseller' },
+    { name: 'কীভাবে অর্ডার করবেন', path: '/how-to-order' },
+    { name: 'About Us', path: '/about' },
+  ];
+
+  const categories = [
+    { name: 'Solid Drop Shoulder', path: '/category/drop-shoulder' },
+    { name: 'Oversized', path: '/category/oversized' },
+    { name: 'Graphic', path: '/category/graphic' },
+    { name: 'Embroidered', path: '/category/embroidered' },
+    { name: 'Polo', path: '/category/polo' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-deep-black text-off-white selection:bg-royal-gold selection:text-deep-black">
+      {/* Announcement Bar */}
+      <div className="bg-steel-blue py-2 overflow-hidden whitespace-nowrap relative">
+        <div className="animate-marquee inline-block px-4 text-xs font-bold tracking-wider uppercase text-white">
+          <span className="bangla">🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার &nbsp;&nbsp;&nbsp;&nbsp; 🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার</span>
+        </div>
+      </div>
+
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-white/5 h-[70px] flex items-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex justify-between items-center">
+            {/* Left: Logo */}
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-royal-gold rounded-full flex items-center justify-center text-deep-black font-black text-lg">T</div>
+              <span className="text-xl font-black tracking-tighter font-cinzel text-royal-gold hidden sm:block">TARGET FASHION</span>
+            </Link>
+            
+            {/* Middle: Nav Links */}
+            <div className="hidden lg:flex items-center gap-6 font-bold text-[13px] uppercase tracking-wider">
+              <Link to="/" className={`hover:text-royal-gold transition-colors ${location.pathname === '/' ? 'text-royal-gold' : ''}`}>Home</Link>
+              
+              {/* Products Dropdown */}
+              <div 
+                className="relative group"
+                onMouseEnter={() => setIsProductsOpen(true)}
+                onMouseLeave={() => setIsProductsOpen(false)}
+              >
+                <button className="flex items-center gap-1 hover:text-royal-gold transition-colors uppercase">
+                  Products <ChevronRight size={14} className="rotate-90" />
+                </button>
+                <AnimatePresence>
+                  {isProductsOpen && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full left-0 w-56 bg-[#080808] border border-white/10 rounded-xl mt-2 py-4 shadow-2xl"
+                    >
+                      {categories.map(cat => (
+                        <Link 
+                          key={cat.path} 
+                          to={cat.path} 
+                          className="block px-6 py-2 hover:bg-royal-gold hover:text-deep-black transition-colors"
+                        >
+                          {cat.name}
+                        </Link>
+                      ))}
+                      <div className="border-t border-white/5 mt-2 pt-2">
+                        <Link to="/catalog" className="block px-6 py-2 hover:text-royal-gold transition-colors font-black">View All</Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {navLinks.slice(1).map(link => (
+                <Link 
+                  key={link.path} 
+                  to={link.path} 
+                  className={`hover:text-royal-gold transition-colors ${location.pathname === link.path ? 'text-royal-gold' : ''}`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </div>
+
+            {/* Right: Icons & Button */}
+            <div className="flex items-center gap-4">
+              <button className="text-off-white/60 hover:text-royal-gold transition-colors hidden sm:block">
+                <Search size={20} />
+              </button>
+              <Link to="/cart" className="text-off-white/60 hover:text-royal-gold transition-colors relative">
+                <ShoppingBag size={20} />
+                {totalItems > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-royal-gold text-deep-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+              <a href="https://wa.me/8801234567890" target="_blank" className="text-off-white/60 hover:text-green-500 transition-colors">
+                <MessageSquare size={20} />
+              </a>
+              <Link 
+                to="/reseller"
+                className="hidden sm:block bg-royal-gold text-deep-black px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-white transition-all transform active:scale-95"
+              >
+                Reseller হন
+              </Link>
+              <button className="lg:hidden text-royal-gold" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            className="fixed inset-0 z-[60] bg-deep-black pt-24 px-6 lg:hidden"
+          >
+            <div className="flex flex-col gap-6 text-xl font-cinzel text-center">
+              <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+              <div className="py-2 border-y border-white/5">
+                <p className="text-xs text-royal-gold uppercase tracking-widest mb-4">Categories</p>
+                <div className="grid grid-cols-1 gap-4">
+                  {categories.map(cat => (
+                    <Link key={cat.path} to={cat.path} onClick={() => setIsMenuOpen(false)} className="text-lg">{cat.name}</Link>
+                  ))}
+                </div>
+              </div>
+              {navLinks.slice(1).map(link => (
+                <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)}>{link.name}</Link>
+              ))}
+              <Link 
+                to="/reseller" 
+                onClick={() => setIsMenuOpen(false)}
+                className="bg-royal-gold text-deep-black py-4 rounded-xl font-bold uppercase tracking-widest"
+              >
+                Reseller হন
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <main>{children}</main>
+      
+      {/* Mobile Sticky WhatsApp CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] p-4 bg-deep-black/80 backdrop-blur-lg border-t border-white/5">
+        <a 
+          href={`https://wa.me/8801234567890?text=${encodeURIComponent("আমি Target Fashion থেকে পাইকারি নিতে চাই")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-3 bg-[#25D366] text-white py-4 rounded-2xl font-bold text-sm bangla shadow-xl animate-pulse-green"
+        >
+          <MessageSquare size={20} /> পাইকারি মূল্য জানতে WhatsApp করুন
+        </a>
+      </div>
+
+      <FloatingWhatsApp />
+
+      {/* Footer */}
+      <footer className="bg-deep-black border-t border-white/5 pt-20 pb-10">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+          {/* Col 1: Logo & Tagline */}
+          <div>
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-10 h-10 bg-royal-gold rounded-full flex items-center justify-center text-deep-black font-black text-xl">T</div>
+              <span className="text-2xl font-black tracking-tighter font-cinzel text-royal-gold">TARGET FASHION</span>
+            </div>
+            <p className="text-off-white/50 text-sm font-medium">
+              Bangladesh's Trusted T-shirt Wholesaler. Quality fabric, premium prints, and factory prices.
+            </p>
+          </div>
+
+          {/* Col 2: Quick Links */}
+          <div>
+            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
+            <ul className="space-y-4 text-off-white/60 text-sm">
+              <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link to="/catalog" className="hover:text-white transition-colors">Products</Link></li>
+              <li><Link to="/reseller" className="hover:text-white transition-colors">Reseller হন</Link></li>
+              <li><Link to="/how-to-order" className="hover:text-white transition-colors">কীভাবে অর্ডার করবেন</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 3: Support */}
+          <div>
+            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Support</h4>
+            <ul className="space-y-4 text-off-white/60 text-sm">
+              <li><Link to="/size-guide" className="hover:text-white transition-colors">Size Guide</Link></li>
+              <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
+              <li><Link to="/returns" className="hover:text-white transition-colors">Returns</Link></li>
+              <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Col 4: Connect */}
+          <div>
+            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Connect</h4>
+            <div className="flex gap-4 mb-6">
+              <a href="https://www.facebook.com/profile.php?id=61582254746458" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
+                <Facebook size={18} />
+              </a>
+              <a href="https://wa.me/8801234567890" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all">
+                <MessageSquare size={18} />
+              </a>
+              <a href="mailto:info@targetfashion.com" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-steel-blue hover:text-white transition-all">
+                <Send size={18} />
+              </a>
+            </div>
+            
+            {/* Facebook Page Embed */}
+            <div className="mt-8 overflow-hidden rounded-xl border border-white/5">
+              <div 
+                className="fb-page" 
+                data-href="https://www.facebook.com/profile.php?id=61582254746458" 
+                data-tabs="timeline" 
+                data-width="" 
+                data-height="70" 
+                data-small-header="true" 
+                data-adapt-container-width="true" 
+                data-hide-cover="false" 
+                data-show-facepile="false"
+              >
+                <blockquote cite="https://www.facebook.com/profile.php?id=61582254746458" className="fb-xfbml-parse-ignore">
+                  <a href="https://www.facebook.com/profile.php?id=61582254746458">Target Fashion</a>
+                </blockquote>
+              </div>
+            </div>
+            
+            <p className="text-xs text-off-white/40 mt-6">Dhaka, Bangladesh</p>
+            <Link to="/admin" className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest text-off-white/10 hover:text-royal-gold mt-4 transition-colors">
+              <Settings size={10} /> Admin Panel
+            </Link>
+          </div>
+        </div>
+        
+        {/* Facebook SDK Script */}
+        <div id="fb-root"></div>
+        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
+        <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-white/5 text-center text-off-white/30 text-[10px] tracking-[0.2em] uppercase">
+          &copy; 2025 Target Fashion. All Rights Reserved.
+        </div>
+      </footer>
+    </div>
+  );
+}
