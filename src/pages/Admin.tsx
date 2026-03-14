@@ -154,7 +154,7 @@ export default function Admin() {
           className="bg-dark-card p-12 rounded-[3rem] border border-white/10 w-full max-w-md shadow-2xl"
         >
           <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 overflow-hidden">
-            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
+            <img src="https://i.ibb.co.com/jkF1kQbx/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-black text-center mb-8 uppercase tracking-tighter">Admin Access</h1>
           <form onSubmit={handleLogin} className="space-y-6">
@@ -186,7 +186,7 @@ export default function Admin() {
       {/* Sidebar */}
       <div className="w-20 lg:w-72 bg-dark-card border-r border-white/5 flex flex-col">
         <div className="p-8 flex items-center gap-4">
-          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
+          <img src="https://i.ibb.co.com/jkF1kQbx/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
           <span className="hidden lg:block font-black text-xl tracking-tighter uppercase">Admin Panel</span>
         </div>
 

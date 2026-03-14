@@ -7,6 +7,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Sans+Bengali:wght@400;600;700&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Target Fashion Wholesale — পাইকারি</title>
+    <script>
+      // Defensive script to prevent "Cannot set property fetch" error
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          if (originalFetch) {
+            Object.defineProperty(window, 'fetch', {
+              get: function() { return originalFetch; },
+              set: function(v) { 
+                console.warn('Attempted to overwrite window.fetch. Ignoring to prevent TypeError.');
+              },
+              configurable: true
+            });
+          }
+        } catch (e) {
+          console.error('Error setting up fetch guard:', e);
+        }
+      })();
+    </script>
 
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>

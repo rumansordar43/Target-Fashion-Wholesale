@@ -57,7 +57,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             {/* Left: Logo */}
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src="/logo.png" 
+                src="https://i.ibb.co.com/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-10 h-10 object-contain" 
                 referrerPolicy="no-referrer"
@@ -190,7 +190,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           <div>
             <div className="flex items-center gap-2 mb-6">
               <img 
-                src="/logo.png" 
+                src="https://i.ibb.co.com/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-12 h-12 object-contain" 
                 referrerPolicy="no-referrer"
