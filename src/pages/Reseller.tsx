@@ -64,6 +64,17 @@ export default function Reseller() {
       });
 
       if (response.ok) {
+        const message = `New Reseller Registration:
+Name: ${form.name}
+Phone: ${form.phone}
+Location: ${form.location}
+Business Type: ${form.businessType}
+Monthly Volume: ${form.monthlyVolume}
+Shop Link: ${form.shopLink || 'N/A'}`;
+        
+        const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+
         setSubmitted(true);
         setForm({
           name: '',

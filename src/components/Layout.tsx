@@ -15,6 +15,7 @@ import {
   Settings
 } from 'lucide-react';
 import FloatingWhatsApp from './FloatingWhatsApp';
+import MobileStickyBar from './MobileStickyBar';
 import { useCart } from '../CartContext';
 
 export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
@@ -25,6 +26,8 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
 
   const navLinks = [
     { name: 'Home', path: '/' },
+    { name: 'New Arrivals', path: '/new-arrivals' },
+    { name: 'Offers', path: '/offers' },
     { name: 'Reseller হন', path: '/reseller' },
     { name: 'কীভাবে অর্ডার করবেন', path: '/how-to-order' },
     { name: 'About Us', path: '/about' },
@@ -53,7 +56,12 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           <div className="flex justify-between items-center">
             {/* Left: Logo */}
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-royal-gold rounded-full flex items-center justify-center text-deep-black font-black text-lg">T</div>
+              <img 
+                src="/logo.png" 
+                alt="Target Fashion Logo" 
+                className="w-10 h-10 object-contain" 
+                referrerPolicy="no-referrer"
+              />
               <span className="text-xl font-black tracking-tighter font-cinzel text-royal-gold hidden sm:block">TARGET FASHION</span>
             </Link>
             
@@ -172,18 +180,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
 
       <main>{children}</main>
       
-      {/* Mobile Sticky WhatsApp CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-[90] p-4 bg-deep-black/80 backdrop-blur-lg border-t border-white/5">
-        <a 
-          href={`https://wa.me/8801234567890?text=${encodeURIComponent("আমি Target Fashion থেকে পাইকারি নিতে চাই")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-3 bg-[#25D366] text-white py-4 rounded-2xl font-bold text-sm bangla shadow-xl animate-pulse-green"
-        >
-          <MessageSquare size={20} /> পাইকারি মূল্য জানতে WhatsApp করুন
-        </a>
-      </div>
-
+      <MobileStickyBar />
       <FloatingWhatsApp />
 
       {/* Footer */}
@@ -192,7 +189,12 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           {/* Col 1: Logo & Tagline */}
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-10 h-10 bg-royal-gold rounded-full flex items-center justify-center text-deep-black font-black text-xl">T</div>
+              <img 
+                src="/logo.png" 
+                alt="Target Fashion Logo" 
+                className="w-12 h-12 object-contain" 
+                referrerPolicy="no-referrer"
+              />
               <span className="text-2xl font-black tracking-tighter font-cinzel text-royal-gold">TARGET FASHION</span>
             </div>
             <p className="text-off-white/50 text-sm font-medium">
@@ -206,6 +208,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             <ul className="space-y-4 text-off-white/60 text-sm">
               <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><Link to="/catalog" className="hover:text-white transition-colors">Products</Link></li>
+              <li><Link to="/wholesale-inquiry" className="hover:text-white transition-colors">Wholesale Inquiry</Link></li>
               <li><Link to="/reseller" className="hover:text-white transition-colors">Reseller হন</Link></li>
               <li><Link to="/how-to-order" className="hover:text-white transition-colors">কীভাবে অর্ডার করবেন</Link></li>
             </ul>
@@ -266,7 +269,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         
         {/* Facebook SDK Script */}
         <div id="fb-root"></div>
-        <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
+        <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
         <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-white/5 text-center text-off-white/30 text-[10px] tracking-[0.2em] uppercase">
           &copy; 2025 Target Fashion. All Rights Reserved.
         </div>

@@ -48,6 +48,8 @@ export default function Admin() {
     }
   }, []);
 
+  const [loginError, setLoginError] = useState('');
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === ADMIN_TOKEN) {
@@ -55,8 +57,13 @@ export default function Admin() {
       localStorage.setItem('admin_token', ADMIN_TOKEN);
       fetchAllData();
     } else {
-      alert('Invalid Password');
+      setLoginError('Invalid Password. Please try again.');
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard!');
   };
 
   const handleLogout = () => {
@@ -146,8 +153,8 @@ export default function Admin() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-dark-card p-12 rounded-[3rem] border border-white/10 w-full max-w-md shadow-2xl"
         >
-          <div className="w-20 h-20 bg-royal-gold/20 text-royal-gold rounded-full flex items-center justify-center mx-auto mb-8">
-            <Lock size={40} />
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 overflow-hidden">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-black text-center mb-8 uppercase tracking-tighter">Admin Access</h1>
           <form onSubmit={handleLogin} className="space-y-6">
@@ -155,11 +162,15 @@ export default function Admin() {
               <input 
                 type="password" 
                 placeholder="Enter Admin Password" 
-                className="w-full bg-deep-black border border-white/10 rounded-2xl p-5 outline-none focus:border-royal-gold transition-all text-center"
+                className={`w-full bg-deep-black border rounded-2xl p-5 outline-none transition-all text-center ${loginError ? 'border-red-500' : 'border-white/10 focus:border-royal-gold'}`}
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => {
+                  setPassword(e.target.value);
+                  setLoginError('');
+                }}
                 required
               />
+              {loginError && <p className="text-red-500 text-xs text-center mt-2 font-bold">{loginError}</p>}
             </div>
             <button className="w-full bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all uppercase tracking-widest">
               Login to Dashboard
@@ -175,9 +186,7 @@ export default function Admin() {
       {/* Sidebar */}
       <div className="w-20 lg:w-72 bg-dark-card border-r border-white/5 flex flex-col">
         <div className="p-8 flex items-center gap-4">
-          <div className="w-10 h-10 bg-royal-gold rounded-xl flex items-center justify-center shrink-0">
-            <LayoutDashboard className="text-deep-black" size={24} />
-          </div>
+          <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
           <span className="hidden lg:block font-black text-xl tracking-tighter uppercase">Admin Panel</span>
         </div>
 
@@ -352,7 +361,15 @@ export default function Admin() {
                     <td className="p-6 font-mono text-xs text-royal-gold">#ORD-{order.id}</td>
                     <td className="p-6">
                       <div className="font-bold text-sm">{order.customer_name}</div>
-                      <div className="text-[10px] text-off-white/30">{order.customer_phone}</div>
+                      <div className="flex items-center gap-2">
+                        <div className="text-[10px] text-off-white/30">{order.customer_phone}</div>
+                        <button 
+                          onClick={() => copyToClipboard(order.customer_phone)}
+                          className="text-[8px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
+                        >
+                          Copy
+                        </button>
+                      </div>
                     </td>
                     <td className="p-6 text-sm text-off-white/60">{order.items.length} items</td>
                     <td className="p-6 font-bold">৳{order.total_amount}</td>
@@ -395,7 +412,15 @@ export default function Admin() {
                     <span className="text-[10px] text-off-white/30">{new Date(inquiry.created_at).toLocaleString()}</span>
                   </div>
                   <h3 className="text-xl font-bold mb-2">{inquiry.name}</h3>
-                  <p className="text-royal-gold font-mono text-sm mb-4">{inquiry.phone}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <p className="text-royal-gold font-mono text-sm">{inquiry.phone}</p>
+                    <button 
+                      onClick={() => copyToClipboard(inquiry.phone)}
+                      className="text-[10px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
+                    >
+                      Copy
+                    </button>
+                  </div>
                   <div className="space-y-2">
                     <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Business:</span> {inquiry.business_name || 'N/A'}</p>
                     <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Message:</span> {inquiry.message}</p>
@@ -424,7 +449,15 @@ export default function Admin() {
                     <span className="text-[10px] text-off-white/30">{new Date(inquiry.created_at).toLocaleString()}</span>
                   </div>
                   <h3 className="text-xl font-bold mb-2">{inquiry.name}</h3>
-                  <p className="text-royal-gold font-mono text-sm mb-4">{inquiry.phone}</p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <p className="text-royal-gold font-mono text-sm">{inquiry.phone}</p>
+                    <button 
+                      onClick={() => copyToClipboard(inquiry.phone)}
+                      className="text-[10px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
+                    >
+                      Copy
+                    </button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
                     <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Location:</span> {inquiry.location}</p>
                     <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Type:</span> {inquiry.business_name}</p>
