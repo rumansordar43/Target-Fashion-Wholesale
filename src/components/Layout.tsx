@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -12,17 +12,46 @@ import {
   Search, 
   Send,
   ShoppingBag,
-  Settings
+  Settings,
+  Sun,
+  Moon
 } from 'lucide-react';
 import FloatingWhatsApp from './FloatingWhatsApp';
 import MobileStickyBar from './MobileStickyBar';
 import { useCart } from '../CartContext';
 
+const LogoName = ({ className }: { className?: string }) => (
+  <div className={`flex flex-col items-center leading-none ${className}`}>
+    <span className="font-serif font-black text-2xl sm:text-3xl tracking-tighter bg-gradient-to-b from-[#D4AF37] from-50% to-[#1E3A8A] to-50% bg-clip-text text-transparent">
+      TARGET
+    </span>
+    <span className="font-sans font-bold text-[10px] sm:text-[12px] tracking-[0.4em] text-[#800000] mt-0.5">
+      FASHION
+    </span>
+  </div>
+);
+
 export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const location = useLocation();
   const { totalItems } = useCart();
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light';
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.classList.toggle('light', savedTheme === 'light');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.classList.toggle('light', newTheme === 'light');
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -42,32 +71,27 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
   ];
 
   return (
-    <div className="min-h-screen bg-deep-black text-off-white selection:bg-royal-gold selection:text-deep-black">
+    <div className="min-h-screen bg-deep-black text-off-white selection:bg-royal-gold selection:text-deep-black transition-colors duration-300">
       {/* Announcement Bar */}
-      <div className="bg-steel-blue py-2 overflow-hidden whitespace-nowrap relative">
+      <div className="bg-maroon py-2 overflow-hidden whitespace-nowrap relative border-b border-royal-gold/20">
         <div className="animate-marquee inline-block px-4 text-xs font-bold tracking-wider uppercase text-white">
           <span className="bangla">🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার &nbsp;&nbsp;&nbsp;&nbsp; 🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার</span>
         </div>
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#080808]/95 backdrop-blur-2xl border-b border-white/5 h-[110px] flex items-center">
+      <nav className="sticky top-0 z-50 bg-deep-black/95 backdrop-blur-2xl border-b border-border-subtle h-[110px] flex items-center">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex justify-between items-center gap-4 xl:gap-8">
             {/* Left: Logo */}
-            <Link to="/" className="flex items-center gap-3 shrink-0 min-w-max">
+            <Link to="/" className="flex items-center gap-2 shrink-0 min-w-max">
               <img 
                 src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-12 h-12 sm:w-16 sm:h-16 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
-              <img 
-                src="/logo-name.png" 
-                alt="Target Fashion" 
-                className="h-8 sm:h-11 w-auto object-contain shrink-0" 
-                referrerPolicy="no-referrer"
-              />
+              <LogoName className="scale-90 sm:scale-100 origin-left" />
             </Link>
             
             {/* Middle: Nav Links */}
@@ -120,29 +144,36 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </div>
 
             {/* Right: Icons & Button */}
-            <div className="flex items-center gap-4">
-              <button className="text-off-white/60 hover:text-royal-gold transition-colors hidden sm:block">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <button 
+                onClick={toggleTheme}
+                className="p-2 sm:p-3 rounded-full hover:bg-border-subtle transition-colors text-text-primary hover:text-maroon"
+                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+              <button className="text-text-primary hover:text-maroon transition-colors hidden sm:block p-2">
                 <Search size={20} />
               </button>
-              <Link to="/cart" className="text-off-white/60 hover:text-royal-gold transition-colors relative">
+              <Link to="/cart" className="text-text-primary hover:text-maroon transition-colors relative p-2">
                 <ShoppingBag size={20} />
                 {totalItems > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-royal-gold text-deep-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-maroon text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-deep-black">
                     {totalItems}
                   </span>
                 )}
               </Link>
-              <a href="https://wa.me/8801234567890" target="_blank" className="text-off-white/60 hover:text-green-500 transition-colors">
-                <MessageSquare size={20} />
-              </a>
               <Link 
                 to="/reseller"
-                className="hidden sm:block bg-royal-gold text-deep-black px-6 py-2.5 rounded-full font-black text-sm uppercase tracking-widest hover:bg-white transition-all transform active:scale-95"
+                className="hidden sm:flex items-center gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-6 py-3 rounded-full font-bold text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20"
               >
-                Reseller হন
+                RESELLER হন
               </Link>
-              <button className="lg:hidden text-royal-gold" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              <button 
+                onClick={() => setIsMenuOpen(true)}
+                className="lg:hidden p-2 text-text-primary"
+              >
+                <Menu size={24} />
               </button>
             </div>
           </div>
@@ -200,12 +231,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
                 className="w-12 h-12 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
-              <img 
-                src="/logo-name.png" 
-                alt="Target Fashion" 
-                className="h-8 object-contain shrink-0" 
-                referrerPolicy="no-referrer"
-              />
+              <LogoName className="items-start" />
             </div>
             <p className="text-off-white/50 text-sm font-medium">
               Bangladesh's Trusted T-shirt Wholesaler. Quality fabric, premium prints, and factory prices.
@@ -214,7 +240,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
 
           {/* Col 2: Quick Links */}
           <div>
-            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
+            <h4 className="text-maroon font-bold mb-6 uppercase tracking-widest text-xs">Quick Links</h4>
             <ul className="space-y-4 text-off-white/60 text-sm">
               <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><Link to="/catalog" className="hover:text-white transition-colors">Products</Link></li>
@@ -226,7 +252,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
 
           {/* Col 3: Support */}
           <div>
-            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Support</h4>
+            <h4 className="text-maroon font-bold mb-6 uppercase tracking-widest text-xs">Support</h4>
             <ul className="space-y-4 text-off-white/60 text-sm">
               <li><Link to="/size-guide" className="hover:text-white transition-colors">Size Guide</Link></li>
               <li><Link to="/shipping" className="hover:text-white transition-colors">Shipping Policy</Link></li>
@@ -238,7 +264,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
 
           {/* Col 4: Connect */}
           <div>
-            <h4 className="text-royal-gold font-bold mb-6 uppercase tracking-widest text-xs">Connect</h4>
+            <h4 className="text-maroon font-bold mb-6 uppercase tracking-widest text-xs">Connect</h4>
             <div className="flex gap-4 mb-6">
               <a href="https://www.facebook.com/profile.php?id=61582254746458" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
                 <Facebook size={18} />

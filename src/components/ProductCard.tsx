@@ -63,13 +63,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
       
       <div className="p-6 flex flex-col flex-grow">
         <Link to={`/product/${product.slug}`}>
-          <h3 className="text-lg font-bold mb-2 group-hover:text-royal-gold transition-colors line-clamp-1">{product.title}</h3>
+          <h3 className="text-lg font-bold mb-2 group-hover:text-maroon transition-colors line-clamp-1">{product.title}</h3>
         </Link>
         
         <div className="flex justify-between items-center mb-6">
           <div className="flex flex-col">
             <span className="text-xs text-off-white/40 uppercase tracking-widest">Retail Price</span>
-            <span className="text-xl font-black text-royal-gold">৳{product.retail_price} <span className="text-xs font-normal">থেকে</span></span>
+            <span className="text-xl font-black text-maroon">৳{product.retail_price} <span className="text-xs font-normal">থেকে</span></span>
           </div>
         </div>
 
@@ -78,7 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full bg-white/5 hover:bg-royal-gold text-white hover:text-deep-black py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 text-sm bangla"
+            className="w-full bg-white/5 hover:bg-maroon text-white hover:text-white py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 text-sm bangla"
           >
             <MessageSquare size={18} /> Wholesale Price জানুন
           </a>

@@ -75,13 +75,13 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
     setFilteredProducts(result);
   }, [category, size, color, sortBy, products]);
 
-  if (loading) return <div className="h-screen flex items-center justify-center text-royal-gold font-bold">Loading Catalog...</div>;
+  if (loading) return <div className="h-screen flex items-center justify-center text-maroon font-bold">Loading Catalog...</div>;
 
   return (
     <div className="py-24 px-4 max-w-7xl mx-auto">
       <div className="mb-16">
         <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase">Product Catalog</h1>
-        <p className="text-royal-gold font-semibold tracking-widest uppercase text-sm bangla">পাইকারি কালেকশন ব্রাউজ করুন</p>
+        <p className="text-maroon font-semibold tracking-widest uppercase text-sm bangla">পাইকারি কালেকশন ব্রাউজ করুন</p>
       </div>
 
       {/* Filters & Sort */}
@@ -94,7 +94,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
               <select 
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-deep-black border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-royal-gold appearance-none text-sm"
+                className="w-full bg-deep-black border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-maroon appearance-none text-sm"
               >
                 {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
               </select>
@@ -110,7 +110,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
                 <button 
                   key={s}
                   onClick={() => setSize(s)}
-                  className={`w-10 h-10 rounded-lg border text-[10px] font-bold transition-all ${size === s ? 'bg-royal-gold text-deep-black border-royal-gold' : 'border-white/10 hover:border-white/30'}`}
+                  className={`w-10 h-10 rounded-lg border text-[10px] font-bold transition-all ${size === s ? 'bg-maroon text-white border-maroon' : 'border-white/10 hover:border-white/30'}`}
                 >
                   {s}
                 </button>
@@ -127,7 +127,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
                   key={c.name}
                   onClick={() => setColor(c.name)}
                   title={c.name}
-                  className={`w-8 h-8 rounded-full border-2 transition-all relative ${color === c.name ? 'border-royal-gold scale-110' : 'border-transparent'}`}
+                  className={`w-8 h-8 rounded-full border-2 transition-all relative ${color === c.name ? 'border-maroon scale-110' : 'border-transparent'}`}
                   style={{ backgroundColor: c.hex }}
                 >
                   {c.name === 'All' && <div className="absolute inset-0 flex items-center justify-center text-[8px] font-bold">ALL</div>}
@@ -144,7 +144,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
               <select 
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full bg-deep-black border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-royal-gold appearance-none text-sm"
+                className="w-full bg-deep-black border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-maroon appearance-none text-sm"
               >
                 {sortOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}
               </select>

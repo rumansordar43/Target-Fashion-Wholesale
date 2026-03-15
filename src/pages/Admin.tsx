@@ -28,6 +28,17 @@ import {
 
 const ADMIN_TOKEN = "target-admin-secret-2026";
 
+const LogoName = ({ className }: { className?: string }) => (
+  <div className={`flex flex-col items-center leading-none ${className}`}>
+    <span className="font-serif font-black text-2xl sm:text-3xl tracking-tighter bg-gradient-to-b from-[#D4AF37] from-50% to-[#1E3A8A] to-50% bg-clip-text text-transparent">
+      TARGET
+    </span>
+    <span className="font-sans font-bold text-[10px] sm:text-[12px] tracking-[0.4em] text-[#800000] mt-0.5">
+      FASHION
+    </span>
+  </div>
+);
+
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState('');
@@ -157,7 +168,7 @@ export default function Admin() {
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center overflow-hidden shrink-0">
               <img src="https://i.ibb.co/jkF1kQbx/logo.png" alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
-            <img src="/logo-name.png" alt="Target Fashion" className="h-8 sm:h-11 object-contain shrink-0" referrerPolicy="no-referrer" />
+            <LogoName className="scale-90 sm:scale-100 origin-left" />
           </div>
           <h1 className="text-3xl font-black text-center mb-8 uppercase tracking-tighter">Admin Access</h1>
           <form onSubmit={handleLogin} className="space-y-6">
@@ -190,7 +201,7 @@ export default function Admin() {
       <div className="w-20 lg:w-72 bg-dark-card border-r border-white/5 flex flex-col">
         <div className="p-8 flex items-center gap-2 min-w-max">
           <img src="https://i.ibb.co/jkF1kQbx/logo.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" referrerPolicy="no-referrer" />
-          <img src="/logo-name.png" alt="Target Fashion" className="h-6 object-contain hidden lg:block shrink-0" referrerPolicy="no-referrer" />
+          <LogoName className="hidden lg:flex scale-75 origin-left" />
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-8">
