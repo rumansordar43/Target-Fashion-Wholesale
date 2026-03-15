@@ -15,7 +15,7 @@ const FloatingWhatsApp: React.FC = () => {
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 right-8 z-[100] bg-[#25D366] text-white p-4 rounded-full shadow-2xl flex items-center justify-center group animate-pulse-green"
+      className="fixed bottom-8 right-8 z-[100] bg-[#25D366] text-white p-4 rounded-full shadow-2xl hidden md:flex items-center justify-center group animate-pulse-green"
       title="Chat on WhatsApp"
     >
       <MessageSquare size={32} />

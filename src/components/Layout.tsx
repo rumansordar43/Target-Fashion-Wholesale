@@ -51,27 +51,27 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
       </div>
 
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-[#080808]/80 backdrop-blur-md border-b border-white/5 h-[70px] flex items-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex justify-between items-center">
+      <nav className="sticky top-0 z-50 bg-[#080808]/95 backdrop-blur-2xl border-b border-white/5 h-[110px] flex items-center">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex justify-between items-center gap-4 xl:gap-8">
             {/* Left: Logo */}
-            <Link to="/" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-3 shrink-0 min-w-max">
               <img 
                 src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
-                className="w-10 h-10 object-contain" 
+                className="w-12 h-12 sm:w-16 sm:h-16 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
               <img 
-                src="https://i.ibb.co/WW6mgGMY/logo-name.png" 
+                src="/logo-name.png" 
                 alt="Target Fashion" 
-                className="h-8 object-contain hidden sm:block" 
+                className="h-8 sm:h-11 w-auto object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
             </Link>
             
             {/* Middle: Nav Links */}
-            <div className="hidden lg:flex items-center gap-6 font-bold text-[13px] uppercase tracking-wider">
+            <div className="hidden lg:flex items-center gap-4 xl:gap-7 font-bold text-[13px] xl:text-[15px] uppercase tracking-wider">
               <Link to="/" className={`hover:text-royal-gold transition-colors ${location.pathname === '/' ? 'text-royal-gold' : ''}`}>Home</Link>
               
               {/* Products Dropdown */}
@@ -137,7 +137,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
               </a>
               <Link 
                 to="/reseller"
-                className="hidden sm:block bg-royal-gold text-deep-black px-5 py-2 rounded-full font-bold text-xs uppercase tracking-widest hover:bg-white transition-all transform active:scale-95"
+                className="hidden sm:block bg-royal-gold text-deep-black px-6 py-2.5 rounded-full font-black text-sm uppercase tracking-widest hover:bg-white transition-all transform active:scale-95"
               >
                 Reseller হন
               </Link>
@@ -156,7 +156,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            className="fixed inset-0 z-[60] bg-deep-black pt-24 px-6 lg:hidden"
+            className="fixed inset-0 z-[60] bg-deep-black pt-36 px-6 lg:hidden"
           >
             <div className="flex flex-col gap-6 text-xl font-cinzel text-center">
               <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
@@ -183,7 +183,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         )}
       </AnimatePresence>
 
-      <main>{children}</main>
+      <main className="pb-24 md:pb-0">{children}</main>
       
       <MobileStickyBar />
       <FloatingWhatsApp />
@@ -193,17 +193,17 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           {/* Col 1: Logo & Tagline */}
           <div>
-            <div className="flex items-center gap-2 mb-6">
+            <div className="flex items-center gap-2 mb-8 min-w-max">
               <img 
                 src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
-                className="w-12 h-12 object-contain" 
+                className="w-12 h-12 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
               <img 
-                src="https://i.ibb.co/WW6mgGMY/logo-name.png" 
+                src="/logo-name.png" 
                 alt="Target Fashion" 
-                className="h-10 object-contain" 
+                className="h-8 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
             </div>

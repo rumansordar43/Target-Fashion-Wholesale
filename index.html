@@ -8,21 +8,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Sans+Bengali:wght@400;600;700&family=Raleway:wght@400;600;700&display=swap" rel="stylesheet">
     <title>Target Fashion Wholesale — পাইকারি</title>
     <script>
-      // Defensive script to prevent "Cannot set property fetch" error
+      // Fix for "Cannot set property fetch" error
       (function() {
         try {
-          var originalFetch = window.fetch;
-          if (originalFetch) {
-            Object.defineProperty(window, 'fetch', {
-              get: function() { return originalFetch; },
-              set: function(v) { 
-                console.warn('Attempted to overwrite window.fetch. Ignoring to prevent TypeError.');
-              },
-              configurable: true
+          var win = window;
+          var originalFetch = win.fetch;
+          
+          // Check if fetch is already defined as a getter-only property
+          var desc = Object.getOwnPropertyDescriptor(win, 'fetch');
+          
+          if (desc && (!desc.writable || !desc.set) && desc.configurable) {
+            // Redefine it to be writable so third-party scripts can overwrite it if they must
+            Object.defineProperty(win, 'fetch', {
+              value: originalFetch,
+              writable: true,
+              configurable: true,
+              enumerable: true
             });
           }
         } catch (e) {
-          console.error('Error setting up fetch guard:', e);
+          // Fallback: if we can't redefine it, at least try to catch the error 
+          // when other scripts try to set it, though this is harder to do globally.
+          console.warn('Fetch property is read-only and could not be redefined:', e);
         }
       })();
     </script>
