@@ -57,12 +57,17 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             {/* Left: Logo */}
             <Link to="/" className="flex items-center gap-2">
               <img 
-                src="https://i.ibb.co.com/jkF1kQbx/logo.png" 
+                src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-10 h-10 object-contain" 
                 referrerPolicy="no-referrer"
               />
-              <span className="text-xl font-black tracking-tighter font-cinzel text-royal-gold hidden sm:block">TARGET FASHION</span>
+              <img 
+                src="https://i.ibb.co/WW6mgGMY/logo-name.png" 
+                alt="Target Fashion" 
+                className="h-8 object-contain hidden sm:block" 
+                referrerPolicy="no-referrer"
+              />
             </Link>
             
             {/* Middle: Nav Links */}
@@ -190,12 +195,17 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           <div>
             <div className="flex items-center gap-2 mb-6">
               <img 
-                src="https://i.ibb.co.com/jkF1kQbx/logo.png" 
+                src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-12 h-12 object-contain" 
                 referrerPolicy="no-referrer"
               />
-              <span className="text-2xl font-black tracking-tighter font-cinzel text-royal-gold">TARGET FASHION</span>
+              <img 
+                src="https://i.ibb.co/WW6mgGMY/logo-name.png" 
+                alt="Target Fashion" 
+                className="h-10 object-contain" 
+                referrerPolicy="no-referrer"
+              />
             </div>
             <p className="text-off-white/50 text-sm font-medium">
               Bangladesh's Trusted T-shirt Wholesaler. Quality fabric, premium prints, and factory prices.
