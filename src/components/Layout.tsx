@@ -57,13 +57,13 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             {/* Left: Logo */}
             <Link to="/" className="flex items-center gap-3 shrink-0 min-w-max">
               <img 
-                src="https://i.ibb.co/9HqJv2VF/logo.png" 
+                src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-12 h-12 sm:w-16 sm:h-16 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
               <img 
-                src="https://i.ibb.co/8DLcTsxx/logo-name.png" 
+                src="/logo-name.png" 
                 alt="Target Fashion" 
                 className="h-8 sm:h-11 w-auto object-contain shrink-0" 
                 referrerPolicy="no-referrer"
@@ -195,13 +195,13 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           <div>
             <div className="flex items-center gap-2 mb-8 min-w-max">
               <img 
-                src="https://i.ibb.co/9HqJv2VF/logo.png" 
+                src="https://i.ibb.co/jkF1kQbx/logo.png" 
                 alt="Target Fashion Logo" 
                 className="w-12 h-12 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
               <img 
-                src="https://i.ibb.co/8DLcTsxx/logo-name.png" 
+                src="/logo-name.png" 
                 alt="Target Fashion" 
                 className="h-8 object-contain shrink-0" 
                 referrerPolicy="no-referrer"

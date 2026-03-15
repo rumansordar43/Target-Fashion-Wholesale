@@ -155,9 +155,9 @@ export default function Admin() {
         >
           <div className="flex items-center justify-center gap-2 mb-8 min-w-max">
             <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center overflow-hidden shrink-0">
-              <img src="https://i.ibb.co/9HqJv2VF/logo.png" alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+              <img src="https://i.ibb.co/jkF1kQbx/logo.png" alt="Logo" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
-            <img src="https://i.ibb.co/8DLcTsxx/logo-name.png" alt="Target Fashion" className="h-8 sm:h-11 object-contain shrink-0" referrerPolicy="no-referrer" />
+            <img src="/logo-name.png" alt="Target Fashion" className="h-8 sm:h-11 object-contain shrink-0" referrerPolicy="no-referrer" />
           </div>
           <h1 className="text-3xl font-black text-center mb-8 uppercase tracking-tighter">Admin Access</h1>
           <form onSubmit={handleLogin} className="space-y-6">
@@ -189,8 +189,8 @@ export default function Admin() {
       {/* Sidebar */}
       <div className="w-20 lg:w-72 bg-dark-card border-r border-white/5 flex flex-col">
         <div className="p-8 flex items-center gap-2 min-w-max">
-          <img src="https://i.ibb.co/9HqJv2VF/logo.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" referrerPolicy="no-referrer" />
-          <img src="https://i.ibb.co/8DLcTsxx/logo-name.png" alt="Target Fashion" className="h-6 object-contain hidden lg:block shrink-0" referrerPolicy="no-referrer" />
+          <img src="https://i.ibb.co/jkF1kQbx/logo.png" alt="Logo" className="w-8 h-8 object-contain shrink-0" referrerPolicy="no-referrer" />
+          <img src="/logo-name.png" alt="Target Fashion" className="h-6 object-contain hidden lg:block shrink-0" referrerPolicy="no-referrer" />
         </div>
 
         <nav className="flex-1 px-4 space-y-2 mt-8">
