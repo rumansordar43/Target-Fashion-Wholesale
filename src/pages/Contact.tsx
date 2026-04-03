@@ -18,13 +18,13 @@ export default function Contact() {
             <h2 className="text-3xl font-bold mb-12 uppercase tracking-tight">Contact Info</h2>
             
             <div className="space-y-8">
-              <a href="https://wa.me/8801234567890" className="flex items-center gap-6 group">
+              <a href="https://wa.me/8801856078978" className="flex items-center gap-6 group">
                 <div className="w-16 h-16 bg-royal-gold/10 rounded-2xl flex items-center justify-center group-hover:bg-royal-gold group-hover:text-deep-black transition-all">
                   <MessageSquare size={28} />
                 </div>
                 <div>
                   <p className="text-sm text-off-white/40 uppercase font-bold tracking-widest mb-1">WhatsApp</p>
-                  <p className="text-xl font-bold">+880 1234 567890</p>
+                  <p className="text-xl font-bold">+880 1856-078978</p>
                 </div>
               </a>
 
@@ -38,13 +38,13 @@ export default function Contact() {
                 </div>
               </div>
 
-              <a href="mailto:info@targetfashion.com" className="flex items-center gap-6 group">
+              <a href="mailto:info@prismkicks.com" className="flex items-center gap-6 group">
                 <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-white group-hover:text-deep-black transition-all">
                   <Mail size={28} />
                 </div>
                 <div>
                   <p className="text-sm text-off-white/40 uppercase font-bold tracking-widest mb-1">Email</p>
-                  <p className="text-xl font-bold">info@targetfashion.com</p>
+                  <p className="text-xl font-bold">info@prismkicks.com</p>
                 </div>
               </a>
 
@@ -60,7 +60,7 @@ export default function Contact() {
             </div>
 
             <div className="mt-12 pt-12 border-t border-white/5 flex gap-6">
-              <a href="https://www.facebook.com/profile.php?id=61582254746458" target="_blank" className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
+              <a href="https://www.facebook.com/share/1XSmanaXQk/" target="_blank" className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
                 <Facebook size={24} />
               </a>
             </div>
@@ -109,7 +109,7 @@ export default function Contact() {
           যেকোনো জরুরি প্রয়োজনে আমাদের সরাসরি হোয়াটসঅ্যাপে মেসেজ দিন। আমাদের টিম আপনাকে দ্রুত সহায়তা করবে।
         </p>
         <a 
-          href="https://wa.me/8801234567890" 
+          href="https://wa.me/8801856078978" 
           className="inline-flex items-center gap-4 bg-deep-black text-white px-16 py-8 rounded-full font-black text-2xl hover:bg-white hover:text-deep-black transition-all"
         >
           <MessageSquare size={32} />

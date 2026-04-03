@@ -13,7 +13,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const whatsappMessage = `আমি ${product.title} এর পাইকারি মূল্য জানতে চাই। Quantity: ___ পিস।`;
-  const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <motion.div 

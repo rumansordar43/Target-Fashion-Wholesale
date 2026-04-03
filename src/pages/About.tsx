@@ -29,9 +29,9 @@ export default function About() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-3xl md:text-5xl font-black mb-8 uppercase leading-tight">Target Fashion <br /><span className="text-royal-gold">কেন আলাদা?</span></h2>
+          <h2 className="text-3xl md:text-5xl font-black mb-8 uppercase leading-tight">Prism Kicks <br /><span className="text-royal-gold">কেন আলাদা?</span></h2>
           <div className="space-y-6 text-off-white/70 bangla leading-relaxed">
-            <p>টার্গেট ফ্যাশন শুধুমাত্র একটি টি-শার্ট ব্র্যান্ড নয়, এটি একটি আস্থার নাম। আমরা জানি একজন রিসেলার বা পাইকারি বিক্রেতার জন্য কোয়ালিটি কতটা গুরুত্বপূর্ণ।</p>
+            <p>প্রিজম কিকস শুধুমাত্র একটি টি-শার্ট ব্র্যান্ড নয়, এটি একটি আস্থার নাম। আমরা জানি একজন রিসেলার বা পাইকারি বিক্রেতার জন্য কোয়ালিটি কতটা গুরুত্বপূর্ণ।</p>
             <p>আমাদের প্রতিটি টি-শার্ট নিজস্ব তত্ত্বাবধানে তৈরি করা হয়। ফেব্রিক সিলেকশন থেকে শুরু করে স্টিচিং এবং ফিনিশিং—প্রতিটি ধাপে আমরা সর্বোচ্চ সতর্কতা অবলম্বন করি।</p>
             <p>আমাদের লক্ষ্য হলো বাংলাদেশের টি-শার্ট মার্কেটকে আরও আধুনিক এবং কোয়ালিটি-ফোকাসড করা, যাতে আমাদের রিসেলাররা গর্বের সাথে তাদের কাস্টমারদের কাছে পণ্য বিক্রি করতে পারে।</p>
           </div>
@@ -72,7 +72,7 @@ export default function About() {
         <h2 className="text-4xl md:text-6xl font-black mb-8 uppercase leading-none">Join Our Community</h2>
         <p className="text-xl mb-12 font-medium bangla max-w-2xl mx-auto">আমাদের নতুন ডিজাইন এবং আপডেট সবার আগে পেতে ফেসবুক পেজে যুক্ত হোন।</p>
         <a 
-          href="https://www.facebook.com/profile.php?id=61582254746458" 
+          href="https://www.facebook.com/share/1XSmanaXQk/" 
           target="_blank" 
           rel="noopener noreferrer"
           className="inline-flex items-center gap-4 bg-deep-black text-white px-12 py-6 rounded-full font-black text-xl hover:bg-white hover:text-deep-black transition-all shadow-2xl"

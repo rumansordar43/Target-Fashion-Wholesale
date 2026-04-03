@@ -19,17 +19,7 @@ import {
 import FloatingWhatsApp from './FloatingWhatsApp';
 import MobileStickyBar from './MobileStickyBar';
 import { useCart } from '../CartContext';
-
-const LogoName = ({ className }: { className?: string }) => (
-  <div className={`flex flex-col items-center leading-none ${className}`}>
-    <span className="font-serif font-black text-2xl sm:text-3xl tracking-tighter bg-gradient-to-b from-[#D4AF37] from-50% to-[#1E3A8A] to-50% bg-clip-text text-transparent">
-      TARGET
-    </span>
-    <span className="font-sans font-bold text-[10px] sm:text-[12px] tracking-[0.4em] text-[#800000] mt-0.5">
-      FASHION
-    </span>
-  </div>
-);
+import { LogoName } from './Logo';
 
 export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -84,14 +74,14 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex justify-between items-center gap-4 xl:gap-8">
             {/* Left: Logo */}
-            <Link to="/" className="flex items-center gap-2 shrink-0 min-w-max">
+            <Link to="/" className="flex items-center gap-0.5 shrink-0 min-w-max">
               <img 
-                src="https://i.ibb.co/9HqJv2VF/logo.png" 
-                alt="Target Fashion Logo" 
+                src="https://lh3.googleusercontent.com/d/1cEF5GtBERApKY0qBJPz1JNuFgUk86URX" 
+                alt="Prism Kicks Logo" 
                 className="w-12 h-12 sm:w-16 sm:h-16 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
-              <LogoName className="scale-90 sm:scale-100 origin-left" />
+              <LogoName className="scale-75 sm:scale-90 origin-left" />
             </Link>
             
             {/* Middle: Nav Links */}
@@ -224,10 +214,10 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           {/* Col 1: Logo & Tagline */}
           <div>
-            <div className="flex items-center gap-2 mb-8 min-w-max">
+            <div className="flex items-center gap-0.5 mb-8 min-w-max">
               <img 
-                src="https://i.ibb.co/jkF1kQbx/logo.png" 
-                alt="Target Fashion Logo" 
+                src="https://lh3.googleusercontent.com/d/1cEF5GtBERApKY0qBJPz1JNuFgUk86URX" 
+                alt="Prism Kicks Logo" 
                 className="w-12 h-12 object-contain shrink-0" 
                 referrerPolicy="no-referrer"
               />
@@ -266,13 +256,13 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
           <div>
             <h4 className="text-maroon font-bold mb-6 uppercase tracking-widest text-xs">Connect</h4>
             <div className="flex gap-4 mb-6">
-              <a href="https://www.facebook.com/profile.php?id=61582254746458" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
+              <a href="https://www.facebook.com/share/1XSmanaXQk/" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-royal-gold hover:text-deep-black transition-all">
                 <Facebook size={18} />
               </a>
-              <a href="https://wa.me/8801234567890" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all">
+              <a href="https://wa.me/8801856078978" target="_blank" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-green-500 hover:text-white transition-all">
                 <MessageSquare size={18} />
               </a>
-              <a href="mailto:info@targetfashion.com" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-steel-blue hover:text-white transition-all">
+              <a href="mailto:info@prismkicks.com" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-steel-blue hover:text-white transition-all">
                 <Send size={18} />
               </a>
             </div>
@@ -281,7 +271,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             <div className="mt-8 overflow-hidden rounded-xl border border-white/5">
               <div 
                 className="fb-page" 
-                data-href="https://www.facebook.com/profile.php?id=61582254746458" 
+                data-href="https://www.facebook.com/share/1XSmanaXQk/" 
                 data-tabs="timeline" 
                 data-width="" 
                 data-height="70" 
@@ -290,8 +280,8 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
                 data-hide-cover="false" 
                 data-show-facepile="false"
               >
-                <blockquote cite="https://www.facebook.com/profile.php?id=61582254746458" className="fb-xfbml-parse-ignore">
-                  <a href="https://www.facebook.com/profile.php?id=61582254746458">Target Fashion</a>
+                <blockquote cite="https://www.facebook.com/share/1XSmanaXQk/" className="fb-xfbml-parse-ignore">
+                  <a href="https://www.facebook.com/share/1XSmanaXQk/">Prism Kicks</a>
                 </blockquote>
               </div>
             </div>
@@ -307,7 +297,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         <div id="fb-root"></div>
         <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
         <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-white/5 text-center text-off-white/30 text-[10px] tracking-[0.2em] uppercase">
-          &copy; 2025 Target Fashion. All Rights Reserved.
+          &copy; 2025 Prism Kicks. All Rights Reserved.
         </div>
       </footer>
     </div>

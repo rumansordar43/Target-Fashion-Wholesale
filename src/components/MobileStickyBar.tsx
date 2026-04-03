@@ -3,8 +3,8 @@ import { MessageSquare, Phone } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const MobileStickyBar: React.FC = () => {
-  const whatsappMessage = "আমি Target Fashion থেকে পাইকারি নিতে চাই";
-  const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappMessage = "আমি Prism Kicks থেকে পাইকারি নিতে চাই";
+  const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <motion.div 

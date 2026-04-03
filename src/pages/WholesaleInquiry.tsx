@@ -49,7 +49,7 @@ Quantity: ${form.quantity}
 Size/Color: ${form.sizeColor}
 Location: ${form.location}`;
         
-        const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
         
         setSubmitted(true);
@@ -85,7 +85,7 @@ Location: ${form.location}`;
               </div>
               <div>
                 <p className="text-xs text-off-white/40 uppercase font-bold tracking-widest mb-1">Call Us Directly</p>
-                <p className="text-xl font-bold">+880 1234-567890</p>
+                <p className="text-xl font-bold">+880 1856-078978</p>
               </div>
             </div>
             <div className="flex items-center gap-6 p-8 bg-dark-card rounded-3xl border border-white/5">
@@ -94,7 +94,7 @@ Location: ${form.location}`;
               </div>
               <div>
                 <p className="text-xs text-off-white/40 uppercase font-bold tracking-widest mb-1">WhatsApp Support</p>
-                <p className="text-xl font-bold">+880 1234-567890</p>
+                <p className="text-xl font-bold">+880 1856-078978</p>
               </div>
             </div>
           </div>

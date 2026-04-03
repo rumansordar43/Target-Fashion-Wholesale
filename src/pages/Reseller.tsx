@@ -72,7 +72,7 @@ Business Type: ${form.businessType}
 Monthly Volume: ${form.monthlyVolume}
 Shop Link: ${form.shopLink || 'N/A'}`;
         
-        const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(message)}`;
+        const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(message)}`;
         window.open(whatsappUrl, '_blank');
 
         setSubmitted(true);
@@ -96,11 +96,11 @@ Shop Link: ${form.shopLink || 'N/A'}`;
     <div className="py-24 px-4 max-w-7xl mx-auto">
       <div className="text-center mb-24">
         <h1 className="text-4xl md:text-7xl font-black mb-8 leading-tight uppercase">
-          Target Fashion Reseller হন — <br />
+          Prism Kicks Reseller হন — <br />
           <span className="text-royal-gold">নিজের ব্যবসা শুরু করুন</span>
         </h1>
         <p className="text-lg md:text-xl text-off-white/70 max-w-3xl mx-auto bangla">
-          টার্গেট ফ্যাশনের সাথে আপনার ব্যবসা শুরু করুন। আমরা রিসেলারদের জন্য সেরা পাইকারি মূল্য এবং পূর্ণ সাপোর্ট প্রদান করি।
+          প্রিজম কিকসের সাথে আপনার ব্যবসা শুরু করুন। আমরা রিসেলারদের জন্য সেরা পাইকারি মূল্য এবং পূর্ণ সাপোর্ট প্রদান করি।
         </p>
       </div>
 

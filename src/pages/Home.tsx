@@ -131,7 +131,7 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
       <section className="py-24 bg-deep-black">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black mb-4 bangla">কেন Target Fashion থেকে পাইকারি নেবেন?</h2>
+            <h2 className="text-3xl md:text-5xl font-black mb-4 bangla">কেন Prism Kicks থেকে পাইকারি নেবেন?</h2>
             <div className="w-24 h-1 bg-maroon mx-auto"></div>
           </div>
           
@@ -271,7 +271,7 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
           <h2 className="text-3xl md:text-5xl font-black mb-6 bangla">আমাদের Facebook Page Follow করুন</h2>
           <p className="text-off-white/60 mb-10 text-lg bangla">নতুন design ও offer সবার আগে পেতে Follow করুন</p>
           <a 
-            href="https://www.facebook.com/profile.php?id=61582254746458" 
+            href="https://www.facebook.com/share/1XSmanaXQk/" 
             target="_blank"
             className="inline-flex items-center gap-3 bg-[#1877F2] text-white px-12 py-5 rounded-full font-black text-xl hover:scale-105 transition-transform shadow-xl"
           >

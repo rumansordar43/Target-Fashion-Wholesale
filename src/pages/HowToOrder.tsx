@@ -47,7 +47,7 @@ export default function HowToOrder() {
     },
   ];
 
-  const template = `আমি Target Fashion থেকে পাইকারি নিতে চাই।
+  const template = `আমি Prism Kicks থেকে পাইকারি নিতে চাই।
 Product: [নাম]
 Color: [রঙ]
 Size: [S/M/L/XL/XXL]
@@ -66,7 +66,7 @@ Quantity: [কত পিস]
       <div className="text-center mb-24">
         <h1 className="text-5xl md:text-8xl font-black mb-8 leading-none uppercase">How to <span className="text-royal-gold">Order</span></h1>
         <p className="text-lg text-off-white/60 bangla max-w-2xl mx-auto">
-          টার্গেট ফ্যাশন থেকে পাইকারি অর্ডার করার সহজ ধাপগুলো নিচে দেওয়া হলো। আমাদের প্রসেস অত্যন্ত স্বচ্ছ এবং দ্রুত।
+          প্রিজম কিকস থেকে পাইকারি অর্ডার করার সহজ ধাপগুলো নিচে দেওয়া হলো। আমাদের প্রসেস অত্যন্ত স্বচ্ছ এবং দ্রুত।
         </p>
       </div>
       

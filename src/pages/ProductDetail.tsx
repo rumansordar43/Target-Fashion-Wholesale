@@ -67,7 +67,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
   if (!product) return <div className="h-screen flex items-center justify-center text-crimson-red font-bold">Product not found</div>;
 
   const whatsappMessage = `আমি ${product.title} এর পাইকারি মূল্য জানতে চাই। Quantity: ___ পিস।`;
-  const whatsappUrl = `https://wa.me/8801234567890?text=${encodeURIComponent(whatsappMessage)}`;
+  const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <div className="py-24 px-4 max-w-7xl mx-auto">
@@ -231,7 +231,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
             
             <div className="grid grid-cols-2 gap-4">
               <a 
-                href="https://www.facebook.com/profile.php?id=61582254746458"
+                href="https://www.facebook.com/share/1XSmanaXQk/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#1877F2] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 text-sm bangla"
