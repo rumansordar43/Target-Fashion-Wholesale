@@ -85,7 +85,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
             onMouseMove={handleMouseMove}
           >
             <img 
-              src={product.gallery?.[activeImage] || product.image_url} 
+              src={[product.image_url, ...(product.gallery || [])].filter(Boolean)[activeImage]} 
               alt={product.title}
               className={`w-full h-full object-cover transition-transform duration-200 ${isZoomed ? 'scale-150' : 'scale-100'}`}
               style={isZoomed ? { transformOrigin: `${mousePos.x}% ${mousePos.y}%` } : {}}
@@ -94,7 +94,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
           </div>
           
           <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-            {(product.gallery || [product.image_url]).map((img, i) => (
+            {[product.image_url, ...(product.gallery || [])].filter(Boolean).map((img, i) => (
               <button 
                 key={i}
                 onClick={() => setActiveImage(i)}
@@ -115,11 +115,11 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
           </div>
 
           {/* Notice Box */}
-          <div className="bg-steel-blue/20 border border-steel-blue/30 p-6 rounded-3xl mb-10 flex items-start gap-4">
+          <div className="bg-steel-blue/10 border border-steel-blue/20 p-6 rounded-3xl mb-10 flex items-start gap-4">
             <div className="w-10 h-10 bg-steel-blue rounded-2xl flex items-center justify-center text-white shrink-0">
               <MessageSquare size={20} />
             </div>
-            <p className="text-sm font-bold bangla leading-relaxed">
+            <p className="text-sm font-bold bangla leading-relaxed text-text-primary">
               💼 পাইকারি মূল্যের জন্য নিচের বাটনে WhatsApp করুন। সর্বনিম্ন অর্ডার ১২ পিস।
             </p>
           </div>
@@ -174,17 +174,17 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
           <div className="mb-10">
             <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-4">Quantity</p>
             <div className="flex items-center gap-6">
-              <div className="flex items-center bg-white/5 rounded-2xl border border-white/10 p-1">
+              <div className="flex items-center bg-dark-card rounded-2xl border border-border-subtle p-1">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-all"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-border-subtle rounded-xl transition-all text-text-primary"
                 >
                   <Minus size={16} />
                 </button>
-                <span className="w-12 text-center font-bold">{quantity}</span>
+                <span className="w-12 text-center font-bold text-text-primary">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-white/10 rounded-xl transition-all"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-border-subtle rounded-xl transition-all text-text-primary"
                 >
                   <Plus size={16} />
                 </button>
@@ -202,7 +202,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <button 
                 onClick={handleAddToCart}
-                className="bg-white text-deep-black py-5 rounded-2xl font-black hover:bg-royal-gold transition-all flex items-center justify-center gap-3 text-lg uppercase tracking-widest"
+                className="bg-text-primary text-deep-black py-5 rounded-2xl font-black hover:bg-royal-gold hover:text-white transition-all flex items-center justify-center gap-3 text-lg uppercase tracking-widest"
               >
                 <ShoppingBag size={24} /> Add to Cart
               </button>
@@ -210,7 +210,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all flex items-center justify-center gap-3 text-lg bangla"
+                className="bg-royal-gold text-text-primary py-5 rounded-2xl font-black hover:bg-text-primary hover:text-deep-black transition-all flex items-center justify-center gap-3 text-lg bangla"
               >
                 <MessageSquare size={24} /> WhatsApp-এ জানুন
               </a>
@@ -240,7 +240,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
               </a>
               <Link 
                 to="/wholesale-inquiry"
-                className="bg-white/5 border border-white/10 text-white py-4 rounded-2xl font-bold hover:bg-white hover:text-deep-black transition-all flex items-center justify-center gap-2 text-sm bangla"
+                className="bg-white/5 border border-border-subtle text-off-white py-4 rounded-2xl font-bold hover:bg-text-primary hover:text-deep-black transition-all flex items-center justify-center gap-2 text-sm bangla"
               >
                 <FileText size={18} /> Inquiry Form পূরণ করুন
               </Link>

@@ -68,10 +68,25 @@ db.exec(`
     items TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
+
+  CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
 `);
 
+// Initialize default settings
+const announcementBarDefault = JSON.stringify({
+  enabled: true,
+  text: "🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার",
+  backgroundColor: "#800000",
+  textColor: "#ffffff"
+});
+
+db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)").run("announcement_bar", announcementBarDefault);
+
 // Admin Middleware (Simple token check for demo)
-const ADMIN_TOKEN = "target-admin-secret-2026";
+const ADMIN_TOKEN = "prism-admin-secret-2026";
 const isAdmin = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const token = req.headers["x-admin-token"];
   if (token === ADMIN_TOKEN) {
@@ -95,7 +110,7 @@ if (productCount.count === 0) {
   const products = [
     {
       title: "Premium Solid Drop Shoulder",
-      sku: "TF-SDS-001",
+      sku: "PK-SDS-001",
       slug: "premium-solid-drop-shoulder",
       category: "Solid",
       price: 550,
@@ -117,7 +132,7 @@ if (productCount.count === 0) {
     },
     {
       title: "Cyberpunk Graphic Tee",
-      sku: "TF-OGT-002",
+      sku: "PK-OGT-002",
       slug: "cyberpunk-graphic-tee",
       category: "Graphic",
       price: 650,
@@ -139,7 +154,7 @@ if (productCount.count === 0) {
     },
     {
       title: "Vintage Embroidered Polo",
-      sku: "TF-POL-003",
+      sku: "PK-POL-003",
       slug: "vintage-embroidered-polo",
       category: "Polo",
       price: 850,
@@ -161,7 +176,7 @@ if (productCount.count === 0) {
     },
     {
       title: "Heavyweight Oversized Tee",
-      sku: "TF-OGT-004",
+      sku: "PK-OGT-004",
       slug: "heavyweight-oversized-tee",
       category: "Oversized",
       price: 750,
@@ -183,7 +198,7 @@ if (productCount.count === 0) {
     },
     {
       title: "Minimalist Full Sleeve",
-      sku: "TF-FST-005",
+      sku: "PK-FST-005",
       slug: "minimalist-full-sleeve",
       category: "Full Sleeve",
       price: 600,
@@ -205,7 +220,7 @@ if (productCount.count === 0) {
     },
     {
       title: "Floral Embroidered Tee",
-      sku: "TF-EDT-006",
+      sku: "PK-EDT-006",
       slug: "floral-embroidered-tee",
       category: "Embroidered",
       price: 700,
@@ -274,6 +289,19 @@ async function startServer() {
     }
   });
 
+  app.get("/api/categories/:category", (req, res) => {
+    const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular FROM products WHERE category = ?").all(req.params.category);
+    const parsedProducts = products.map((p: any) => ({
+      ...p,
+      gallery: p.gallery ? JSON.parse(p.gallery) : [],
+      sizes: p.sizes ? JSON.parse(p.sizes) : [],
+      colors: p.colors ? JSON.parse(p.colors) : [],
+      tags: p.tags ? JSON.parse(p.tags) : [],
+      is_popular: !!p.is_popular
+    }));
+    res.json(parsedProducts);
+  });
+
   app.post("/api/inquiry", async (req, res) => {
     const { name, phone, business_name, message, product_id } = req.body;
     try {
@@ -308,6 +336,21 @@ async function startServer() {
     } catch (error) {
       res.status(500).json({ success: false, error: "Failed to place order" });
     }
+  });
+
+  app.get("/api/announcement-bar", (req, res) => {
+    const setting = db.prepare("SELECT value FROM settings WHERE key = ?").get("announcement_bar") as { value: string } | undefined;
+    if (setting) {
+      res.json(JSON.parse(setting.value));
+    } else {
+      res.json({ enabled: false, text: "", backgroundColor: "#800000", textColor: "#ffffff" });
+    }
+  });
+
+  app.post("/api/admin/announcement-bar", isAdmin, (req, res) => {
+    const value = JSON.stringify(req.body);
+    db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)").run("announcement_bar", value);
+    res.json({ success: true });
   });
 
   // Admin API Routes

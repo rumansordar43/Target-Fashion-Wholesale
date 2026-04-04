@@ -68,14 +68,14 @@ export default function About() {
         </div>
       </div>
 
-      <div className="bg-royal-gold text-deep-black p-16 rounded-[4rem] text-center">
+      <div className="bg-royal-gold text-text-primary p-16 rounded-[4rem] text-center">
         <h2 className="text-4xl md:text-6xl font-black mb-8 uppercase leading-none">Join Our Community</h2>
         <p className="text-xl mb-12 font-medium bangla max-w-2xl mx-auto">আমাদের নতুন ডিজাইন এবং আপডেট সবার আগে পেতে ফেসবুক পেজে যুক্ত হোন।</p>
         <a 
           href="https://www.facebook.com/share/1XSmanaXQk/" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-4 bg-deep-black text-white px-12 py-6 rounded-full font-black text-xl hover:bg-white hover:text-deep-black transition-all shadow-2xl"
+          className="inline-flex items-center gap-4 bg-deep-black text-off-white px-12 py-6 rounded-full font-black text-xl hover:bg-off-white hover:text-deep-black transition-all shadow-2xl"
         >
           <Facebook size={28} />
           Follow on Facebook

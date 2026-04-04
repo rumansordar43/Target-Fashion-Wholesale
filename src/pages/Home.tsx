@@ -28,11 +28,11 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
   }, []);
 
   const categories = [
-    { name: 'Solid Drop Shoulder', slug: 'drop-shoulder', image: 'https://picsum.photos/seed/drop-shoulder/600/800', price: '350' },
-    { name: 'Oversized', slug: 'oversized', image: 'https://picsum.photos/seed/oversized/600/800', price: '380' },
+    { name: 'Solid', slug: 'solid', image: 'https://picsum.photos/seed/drop-shoulder/600/800', price: '350' },
     { name: 'Graphic', slug: 'graphic', image: 'https://picsum.photos/seed/graphic/600/800', price: '400' },
-    { name: 'Embroidered', slug: 'embroidered', image: 'https://picsum.photos/seed/embroidered/600/800', price: '450' },
     { name: 'Polo', slug: 'polo', image: 'https://picsum.photos/seed/polo/600/800', price: '500' },
+    { name: 'Oversized', slug: 'oversized', image: 'https://picsum.photos/seed/oversized/600/800', price: '380' },
+    { name: 'Full Sleeve', slug: 'full-sleeve', image: 'https://picsum.photos/seed/full-sleeve/600/800', price: '450' },
   ];
 
   return (
@@ -55,11 +55,11 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
             </span>
             
             <h1 className="text-6xl md:text-9xl font-black mb-4 leading-none font-cinzel text-royal-gold tracking-tighter drop-shadow-[0_5px_15px_rgba(30,58,138,0.3)]">
-              WHOLESALE<br />YOUR TARGET
+              WHOLESALE<br />PRISM KICKS
             </h1>
             
             <h2 className="text-xl md:text-2xl font-bold mb-6 tracking-[0.3em] uppercase text-off-white/80">
-              TARGET FASHION WHOLESALE
+              PRISM KICKS WHOLESALE
             </h2>
             
             <p className="text-lg md:text-xl mb-12 text-off-white/60 max-w-2xl mx-auto bangla">
@@ -167,7 +167,7 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {categories.map((cat, i) => (
-              <div key={i} className="group bg-deep-black rounded-[2rem] overflow-hidden border border-white/5">
+              <div key={i} className="group bg-deep-black rounded-[2rem] overflow-hidden border border-border-subtle">
                 <div className="aspect-[3/4] overflow-hidden relative">
                   <img 
                     src={cat.image} 
@@ -178,12 +178,12 @@ export default function Home({ openInquiry }: { openInquiry: (product?: Product)
                   <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-transparent to-transparent opacity-60"></div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold mb-2 text-sm">{cat.name}</h3>
+                  <h3 className="font-bold mb-2 text-sm text-text-primary">{cat.name}</h3>
                   <p className="text-royal-gold font-black mb-4">Retail from ৳{cat.price}</p>
                   <a 
                     href={`https://wa.me/8801234567890?text=I'm interested in wholesale for ${cat.name}`}
                     target="_blank"
-                    className="block w-full bg-white/5 hover:bg-royal-gold hover:text-deep-black text-center py-3 rounded-xl text-xs font-bold transition-all bangla"
+                    className="block w-full bg-border-subtle hover:bg-royal-gold hover:text-deep-black text-center py-3 rounded-xl text-xs font-bold transition-all bangla text-text-primary"
                   >
                     Wholesale-এর জন্য WhatsApp করুন
                   </a>

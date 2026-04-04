@@ -117,14 +117,14 @@ Quantity: [কত পিস]
         </div>
       </div>
 
-      <div className="bg-royal-gold text-deep-black p-16 rounded-[4rem] text-center">
+      <div className="bg-royal-gold text-text-primary p-16 rounded-[4rem] text-center">
         <h2 className="text-4xl md:text-6xl font-black mb-6 uppercase">Ready to Order?</h2>
         <p className="text-xl mb-10 font-medium bangla max-w-2xl mx-auto">অর্ডার করতে কোনো সমস্যা হলে সরাসরি কল করুন অথবা হোয়াটসঅ্যাপে মেসেজ দিন।</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="tel:+8801234567890" className="bg-deep-black text-white px-12 py-5 rounded-full font-black text-lg hover:bg-white hover:text-deep-black transition-all">
+          <a href="tel:+8801234567890" className="bg-deep-black text-off-white px-12 py-5 rounded-full font-black text-lg hover:bg-off-white hover:text-deep-black transition-all">
             Call: +880 1234-567890
           </a>
-          <a href="https://wa.me/8801234567890" className="bg-white text-deep-black px-12 py-5 rounded-full font-black text-lg hover:bg-deep-black hover:text-white transition-all">
+          <a href="https://wa.me/8801234567890" className="bg-off-white text-deep-black px-12 py-5 rounded-full font-black text-lg hover:bg-deep-black hover:text-off-white transition-all">
             WhatsApp Message
           </a>
         </div>

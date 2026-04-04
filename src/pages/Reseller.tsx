@@ -267,7 +267,7 @@ Shop Link: ${form.shopLink || 'N/A'}`;
 
               <button 
                 disabled={isSubmitting}
-                className="w-full bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
+                className="w-full bg-royal-gold text-text-primary py-5 rounded-2xl font-black hover:bg-text-primary hover:text-deep-black transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
               >
                 {isSubmitting ? 'Processing...' : 'Reseller হিসেবে Register করুন'}
               </button>

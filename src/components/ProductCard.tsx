@@ -20,11 +20,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
       whileHover={{ y: -10 }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group bg-dark-card rounded-[2rem] overflow-hidden border border-white/5 flex flex-col h-full"
+      className="group bg-dark-card rounded-[2rem] overflow-hidden border border-border-subtle flex flex-col h-full"
     >
       <Link to={`/product/${product.slug}`} className="block aspect-[3/4] overflow-hidden relative">
         <img 
-          src={isHovered && product.image_url_2 ? product.image_url_2 : product.image_url} 
+          src={isHovered && (product.image_url_2 || product.gallery?.[0]) ? (product.image_url_2 || product.gallery?.[0]) : product.image_url} 
           alt={product.title}
           className="w-full h-full object-cover transition-all duration-700"
           referrerPolicy="no-referrer"
@@ -63,7 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
       
       <div className="p-6 flex flex-col flex-grow">
         <Link to={`/product/${product.slug}`}>
-          <h3 className="text-lg font-bold mb-2 group-hover:text-maroon transition-colors line-clamp-1">{product.title}</h3>
+          <h3 className="text-lg font-bold mb-2 group-hover:text-maroon transition-colors line-clamp-1 text-text-primary">{product.title}</h3>
         </Link>
         
         <div className="flex justify-between items-center mb-6">
@@ -78,7 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full bg-white/5 hover:bg-maroon text-white hover:text-white py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 text-sm bangla"
+            className="w-full bg-border-subtle hover:bg-maroon text-text-primary hover:text-white py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 text-sm bangla"
           >
             <MessageSquare size={18} /> Wholesale Price জানুন
           </a>

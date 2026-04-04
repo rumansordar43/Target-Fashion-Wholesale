@@ -10,7 +10,7 @@ export default function Offers() {
           <h3 className="text-4xl font-black mb-4 uppercase">Starter Bundle</h3>
           <p className="text-off-white/60 mb-8 bangla">১২ পিস টি-শার্টের স্টার্টার প্যাক। নতুন রিসেলারদের জন্য সেরা অফার।</p>
           <div className="text-5xl font-black text-royal-gold mb-8">৳9,999 <span className="text-sm text-off-white/30 line-through">৳12,000</span></div>
-          <button className="bg-white text-deep-black px-10 py-4 rounded-2xl font-bold hover:bg-royal-gold transition-all">Get Offer</button>
+          <button className="bg-black text-white px-10 py-4 rounded-2xl font-bold hover:bg-royal-gold transition-all">Get Offer</button>
         </div>
 
         <div className="bg-dark-card p-12 rounded-[3rem] border border-white/5 relative overflow-hidden group">
@@ -19,14 +19,14 @@ export default function Offers() {
           <h3 className="text-4xl font-black mb-4 uppercase">Business Pack</h3>
           <p className="text-off-white/60 mb-8 bangla">৫০ পিস টি-শার্টের প্রিমিয়াম প্যাক। বড় দোকানদারদের জন্য সেরা ডিল।</p>
           <div className="text-5xl font-black text-royal-gold mb-8">৳39,999 <span className="text-sm text-off-white/30 line-through">৳45,000</span></div>
-          <button className="bg-white text-deep-black px-10 py-4 rounded-2xl font-bold hover:bg-royal-gold transition-all">Get Offer</button>
+          <button className="bg-black text-white px-10 py-4 rounded-2xl font-bold hover:bg-royal-gold transition-all">Get Offer</button>
         </div>
       </div>
 
-      <div className="mt-24 p-12 bg-royal-gold text-deep-black rounded-[3rem] text-center">
+      <div className="mt-24 p-12 bg-royal-gold text-text-primary rounded-[3rem] text-center">
         <h2 className="text-3xl font-black mb-6 uppercase tracking-tighter">Custom Bundle?</h2>
         <p className="text-lg font-medium mb-8 bangla">আপনার নিজের মতো করে বান্ডেল তৈরি করতে আমাদের সাথে যোগাযোগ করুন।</p>
-        <a href="https://wa.me/8801234567890" className="bg-deep-black text-white px-12 py-5 rounded-full font-black text-lg hover:bg-white hover:text-deep-black transition-all">
+        <a href="https://wa.me/8801234567890" className="bg-deep-black text-off-white px-12 py-5 rounded-full font-black text-lg hover:bg-off-white hover:text-deep-black transition-all">
           Contact for Custom Deal
         </a>
       </div>

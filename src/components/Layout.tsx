@@ -25,7 +25,24 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [announcement, setAnnouncement] = useState<{ enabled: boolean, text: string, backgroundColor: string, textColor: string }>({
+    enabled: false,
+    text: "",
+    backgroundColor: "#800000",
+    textColor: "#ffffff"
+  });
   const location = useLocation();
+
+  useEffect(() => {
+    const fetchAnnouncement = () => {
+      fetch(`/api/announcement-bar?t=${Date.now()}`)
+        .then(res => res.json())
+        .then(data => setAnnouncement(data))
+        .catch(err => console.error('Failed to fetch announcement bar:', err));
+    };
+
+    fetchAnnouncement();
+  }, [location.pathname]);
   const { totalItems } = useCart();
 
   useEffect(() => {
@@ -52,26 +69,37 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
   ];
 
   const categories = [
-    { name: 'Solid Drop Shoulder', path: '/category/drop-shoulder' },
-    { name: 'Oversized', path: '/category/oversized' },
+    { name: 'Solid', path: '/category/solid' },
     { name: 'Graphic', path: '/category/graphic' },
-    { name: 'Embroidered', path: '/category/embroidered' },
     { name: 'Polo', path: '/category/polo' },
+    { name: 'Oversized', path: '/category/oversized' },
+    { name: 'Full Sleeve', path: '/category/full-sleeve' },
+    { name: 'Embroidered', path: '/category/embroidered' },
   ];
 
   return (
     <div className="min-h-screen bg-deep-black text-off-white selection:bg-royal-gold selection:text-deep-black transition-colors duration-300">
       {/* Announcement Bar */}
-      <div className="bg-maroon py-2 overflow-hidden whitespace-nowrap relative border-b border-royal-gold/20">
-        <div className="animate-marquee inline-block px-4 text-xs font-bold tracking-wider uppercase text-white">
-          <span className="bangla">🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার &nbsp;&nbsp;&nbsp;&nbsp; 🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার</span>
+      {announcement.enabled && (
+        <div 
+          className="py-2 overflow-hidden whitespace-nowrap relative border-b border-royal-gold/20"
+          style={{ backgroundColor: announcement.backgroundColor }}
+        >
+          <div 
+            className="animate-marquee inline-block px-4 text-xs font-bold tracking-wider uppercase"
+            style={{ color: announcement.textColor }}
+          >
+            <span className="bangla">
+              {announcement.text} &nbsp;&nbsp;&nbsp;&nbsp; {announcement.text}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Navbar */}
       <nav className="sticky top-0 z-50 bg-deep-black/95 backdrop-blur-2xl border-b border-border-subtle h-[110px] flex items-center">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex justify-between items-center gap-4 xl:gap-8">
+          <div className="flex justify-between items-center gap-2 xl:gap-8">
             {/* Left: Logo */}
             <Link to="/" className="flex items-center gap-0.5 shrink-0 min-w-max">
               <img 
@@ -84,7 +112,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </Link>
             
             {/* Middle: Nav Links */}
-            <div className="hidden lg:flex items-center gap-4 xl:gap-7 font-bold text-[13px] xl:text-[15px] uppercase tracking-wider">
+            <div className="hidden lg:flex items-center gap-2 xl:gap-4 2xl:gap-7 font-bold text-[10px] xl:text-[12px] 2xl:text-[14px] uppercase tracking-wider whitespace-nowrap">
               <Link to="/" className={`hover:text-royal-gold transition-colors ${location.pathname === '/' ? 'text-royal-gold' : ''}`}>Home</Link>
               
               {/* Products Dropdown */}
@@ -94,7 +122,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
                 onMouseLeave={() => setIsProductsOpen(false)}
               >
                 <button className="flex items-center gap-1 hover:text-royal-gold transition-colors uppercase">
-                  Products <ChevronRight size={14} className="rotate-90" />
+                  Products <ChevronRight size={12} className="rotate-90" />
                 </button>
                 <AnimatePresence>
                   {isProductsOpen && (
@@ -102,19 +130,19 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 w-56 bg-[#080808] border border-white/10 rounded-xl mt-2 py-4 shadow-2xl"
+                      className="absolute top-full left-0 w-56 bg-dark-card border border-border-subtle rounded-xl mt-2 py-4 shadow-2xl"
                     >
                       {categories.map(cat => (
                         <Link 
                           key={cat.path} 
                           to={cat.path} 
-                          className="block px-6 py-2 hover:bg-royal-gold hover:text-deep-black transition-colors"
+                          className="block px-6 py-2 hover:bg-royal-gold hover:text-deep-black transition-colors text-text-primary"
                         >
                           {cat.name}
                         </Link>
                       ))}
-                      <div className="border-t border-white/5 mt-2 pt-2">
-                        <Link to="/catalog" className="block px-6 py-2 hover:text-royal-gold transition-colors font-black">View All</Link>
+                      <div className="border-t border-border-subtle mt-2 pt-2">
+                        <Link to="/catalog" className="block px-6 py-2 hover:text-royal-gold transition-colors font-black text-text-primary">View All</Link>
                       </div>
                     </motion.div>
                   )}
@@ -133,7 +161,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </div>
 
             {/* Right: Icons & Button */}
-            <div className="flex items-center gap-1 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-2 xl:gap-4 shrink-0">
               <button 
                 onClick={toggleTheme}
                 className="p-2 sm:p-3 rounded-full hover:bg-border-subtle transition-colors text-text-primary hover:text-maroon"
@@ -154,7 +182,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
               </Link>
               <Link 
                 to="/reseller"
-                className="hidden xl:flex items-center gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-6 py-3 rounded-full font-bold text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20"
+                className="hidden lg:flex items-center gap-1.5 xl:gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-3 xl:px-6 py-2 xl:py-3 rounded-full font-bold text-[10px] xl:text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20 whitespace-nowrap"
               >
                 RESELLER হন
               </Link>
@@ -255,7 +283,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
       <FloatingWhatsApp />
 
       {/* Footer */}
-      <footer className="bg-deep-black border-t border-white/5 pt-20 pb-10">
+      <footer className="bg-deep-black border-t border-border-subtle pt-20 pb-10">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           {/* Col 1: Logo & Tagline */}
           <div>
@@ -313,7 +341,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </div>
             
             {/* Facebook Page Embed */}
-            <div className="mt-8 overflow-hidden rounded-xl border border-white/5">
+            <div className="mt-8 overflow-hidden rounded-xl border border-border-subtle">
               <div 
                 className="fb-page" 
                 data-href="https://www.facebook.com/share/1XSmanaXQk/" 
@@ -341,7 +369,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
         {/* Facebook SDK Script */}
         <div id="fb-root"></div>
         <script async defer crossOrigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v18.0"></script>
-        <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-white/5 text-center text-off-white/30 text-[10px] tracking-[0.2em] uppercase">
+        <div className="max-w-7xl mx-auto px-4 pt-10 border-t border-border-subtle text-center text-off-white/30 text-[10px] tracking-[0.2em] uppercase">
           &copy; 2025 Prism Kicks. All Rights Reserved.
         </div>
       </footer>

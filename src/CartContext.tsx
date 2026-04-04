@@ -23,7 +23,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('target_cart');
+    const savedCart = localStorage.getItem('prism_cart');
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
@@ -34,7 +34,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('target_cart', JSON.stringify(cart));
+    localStorage.setItem('prism_cart', JSON.stringify(cart));
   }, [cart]);
 
   const addToCart = (product: Product, quantity: number, size: string, color: string) => {

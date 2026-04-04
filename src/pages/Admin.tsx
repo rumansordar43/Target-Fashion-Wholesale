@@ -23,11 +23,12 @@ import {
   Tag,
   Layers,
   BarChart3,
-  RefreshCw
+  RefreshCw,
+  Settings
 } from 'lucide-react';
 import { LogoName } from '../components/Logo';
 
-const ADMIN_TOKEN = "target-admin-secret-2026";
+const ADMIN_TOKEN = "prism-admin-secret-2026";
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,12 +38,18 @@ export default function Admin() {
   const [wholesaleInquiries, setWholesaleInquiries] = useState<any[]>([]);
   const [resellerInquiries, setResellerInquiries] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>({
+    enabled: true,
+    text: '',
+    backgroundColor: '#800000',
+    textColor: '#ffffff'
+  });
   const [loading, setLoading] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('admin_token');
+    const savedToken = localStorage.getItem('prism_admin_token');
     if (savedToken === ADMIN_TOKEN) {
       setIsLoggedIn(true);
       fetchAllData();
@@ -55,7 +62,7 @@ export default function Admin() {
     e.preventDefault();
     if (password === ADMIN_TOKEN) {
       setIsLoggedIn(true);
-      localStorage.setItem('admin_token', ADMIN_TOKEN);
+      localStorage.setItem('prism_admin_token', ADMIN_TOKEN);
       fetchAllData();
     } else {
       setLoginError('Invalid Password. Please try again.');
@@ -69,7 +76,7 @@ export default function Admin() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('admin_token');
+    localStorage.removeItem('prism_admin_token');
   };
 
   const fetchAllData = async () => {
@@ -87,6 +94,9 @@ export default function Admin() {
       if (wRes.ok) setWholesaleInquiries(await wRes.json());
       if (rRes.ok) setResellerInquiries(await rRes.json());
       if (oRes.ok) setOrders(await oRes.json());
+      
+      const sRes = await fetch(`/api/announcement-bar?t=${Date.now()}`);
+      if (sRes.ok) setSettings(await sRes.json());
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
@@ -128,6 +138,11 @@ export default function Admin() {
     const method = editingProduct.id ? 'PUT' : 'POST';
     const url = editingProduct.id ? `/api/admin/products/${editingProduct.id}` : '/api/admin/products';
     
+    const productToSave = {
+      ...editingProduct,
+      gallery: (editingProduct.gallery || []).filter((url: string) => url && url.trim() !== '')
+    };
+    
     try {
       const res = await fetch(url, {
         method,
@@ -135,7 +150,7 @@ export default function Admin() {
           'Content-Type': 'application/json',
           'x-admin-token': ADMIN_TOKEN 
         },
-        body: JSON.stringify(editingProduct)
+        body: JSON.stringify(productToSave)
       });
       if (res.ok) {
         setIsProductModalOpen(false);
@@ -143,6 +158,27 @@ export default function Admin() {
       }
     } catch (error) {
       console.error("Save product error:", error);
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/announcement-bar', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN 
+        },
+        body: JSON.stringify(settings)
+      });
+      if (res.ok) {
+        alert('Settings saved successfully!');
+      }
+    } catch (error) {
+      console.error("Save settings error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -211,6 +247,7 @@ export default function Admin() {
             { id: 'orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
             { id: 'wholesale', icon: <MessageSquare size={20} />, label: 'Wholesale Inquiries' },
             { id: 'resellers', icon: <Users size={20} />, label: 'Reseller Inquiries' },
+            { id: 'settings', icon: <Settings size={20} />, label: 'Settings' },
           ].map(item => (
             <button
               key={item.id}
@@ -246,6 +283,7 @@ export default function Admin() {
               {activeTab === 'orders' && 'Order Management'}
               {activeTab === 'wholesale' && 'Wholesale Leads'}
               {activeTab === 'resellers' && 'Reseller Applications'}
+              {activeTab === 'settings' && 'Site Settings'}
             </h2>
             <p className="text-off-white/40 mt-2 bangla">সিস্টেমের বর্তমান অবস্থা এবং ডেটা ম্যানেজমেন্ট।</p>
           </div>
@@ -296,7 +334,7 @@ export default function Admin() {
               <table className="w-full text-left">
                 <thead>
                   <tr className="bg-white/5 text-[10px] uppercase tracking-widest text-off-white/40">
-                    <th className="p-6">Product</th>
+                    <th className="p-6">Prism Kicks Product</th>
                     <th className="p-6">Category</th>
                     <th className="p-6">Retail Price</th>
                     <th className="p-6">Wholesale Price</th>
@@ -491,6 +529,107 @@ export default function Admin() {
             ))}
           </div>
         )}
+
+        {activeTab === 'settings' && (
+          <div className="max-w-2xl space-y-8">
+            <div className="bg-dark-card p-12 rounded-[3rem] border border-white/5 shadow-2xl">
+              <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter flex items-center gap-3">
+                <BarChart3 className="text-royal-gold" /> Announcement Bar
+              </h3>
+              
+              <div className="space-y-8">
+                <div className="flex items-center justify-between p-6 bg-deep-black rounded-2xl border border-white/5">
+                  <div>
+                    <p className="font-bold uppercase tracking-widest text-xs mb-1">Enable Banner</p>
+                    <p className="text-[10px] text-off-white/40 bangla">ব্যানারটি ওয়েবসাইটে দেখাবে কি না তা নির্ধারণ করুন।</p>
+                  </div>
+                  <button 
+                    onClick={() => setSettings({...settings, enabled: !settings.enabled})}
+                    className={`w-16 h-8 rounded-full transition-all relative ${settings.enabled ? 'bg-royal-gold' : 'bg-white/10'}`}
+                  >
+                    <div className={`absolute top-1 w-6 h-6 rounded-full bg-deep-black transition-all ${settings.enabled ? 'left-9' : 'left-1'}`} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block text-[10px] uppercase tracking-widest text-off-white/40 font-bold ml-2">Banner Text</label>
+                  <textarea 
+                    rows={3}
+                    className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all resize-none font-bold"
+                    value={settings.text}
+                    onChange={e => setSettings({...settings, text: e.target.value})}
+                    placeholder="Enter announcement text..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 font-bold ml-2">Background Color</label>
+                    <div className="flex gap-3">
+                      <input 
+                        type="color" 
+                        className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
+                        value={settings.backgroundColor}
+                        onChange={e => setSettings({...settings, backgroundColor: e.target.value})}
+                      />
+                      <input 
+                        type="text" 
+                        className="flex-1 bg-deep-black border border-white/10 rounded-xl px-4 outline-none focus:border-royal-gold transition-all font-mono text-sm uppercase"
+                        value={settings.backgroundColor}
+                        onChange={e => setSettings({...settings, backgroundColor: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 font-bold ml-2">Text Color</label>
+                    <div className="flex gap-3">
+                      <input 
+                        type="color" 
+                        className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
+                        value={settings.textColor}
+                        onChange={e => setSettings({...settings, textColor: e.target.value})}
+                      />
+                      <input 
+                        type="text" 
+                        className="flex-1 bg-deep-black border border-white/10 rounded-xl px-4 outline-none focus:border-royal-gold transition-all font-mono text-sm uppercase"
+                        value={settings.textColor}
+                        onChange={e => setSettings({...settings, textColor: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-8">
+                  <button 
+                    onClick={handleSaveSettings}
+                    disabled={loading}
+                    className="w-full bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-royal-gold/20"
+                  >
+                    <Save size={24} /> {loading ? 'Saving...' : 'Save Settings'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-royal-gold/5 p-8 rounded-[2rem] border border-royal-gold/10">
+              <h4 className="text-royal-gold font-bold uppercase tracking-widest text-xs mb-4">Preview</h4>
+              {!settings.enabled ? (
+                <div className="py-8 text-center text-off-white/20 border border-dashed border-white/10 rounded-xl uppercase tracking-widest text-[10px] font-bold">
+                  Banner is currently disabled
+                </div>
+              ) : (
+                <div 
+                  className="py-3 px-6 rounded-xl overflow-hidden whitespace-nowrap relative"
+                  style={{ backgroundColor: settings.backgroundColor, color: settings.textColor }}
+                >
+                  <div className="animate-marquee inline-block font-bold text-xs uppercase">
+                    {settings.text} &nbsp;&nbsp;&nbsp;&nbsp; {settings.text}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Product Modal */}
@@ -590,14 +729,33 @@ export default function Admin() {
 
                   <div className="space-y-6">
                     <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Main Image URL</label>
+                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Main Image URL (Required)</label>
                       <input 
                         type="url" 
                         required
+                        placeholder="https://example.com/main-image.jpg"
                         className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
                         value={editingProduct.image_url}
                         onChange={e => setEditingProduct({...editingProduct, image_url: e.target.value})}
                       />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {[0, 1, 2, 3].map((index) => (
+                        <div key={index}>
+                          <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Gallery Image {index + 2} (Optional)</label>
+                          <input 
+                            type="url" 
+                            placeholder={`https://example.com/image-${index + 2}.jpg`}
+                            className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                            value={editingProduct.gallery?.[index] || ''}
+                            onChange={e => {
+                              const newGallery = [...(editingProduct.gallery || [])];
+                              newGallery[index] = e.target.value;
+                              setEditingProduct({...editingProduct, gallery: newGallery});
+                            }}
+                          />
+                        </div>
+                      ))}
                     </div>
                     <div>
                       <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Category</label>
@@ -650,7 +808,7 @@ export default function Admin() {
                   </div>
 
                   <div className="md:col-span-2 pt-8">
-                    <button className="w-full bg-royal-gold text-deep-black py-6 rounded-2xl font-black hover:bg-white transition-all uppercase tracking-widest flex items-center justify-center gap-3">
+                    <button className="w-full bg-royal-gold text-text-primary py-6 rounded-2xl font-black hover:bg-text-primary hover:text-deep-black transition-all uppercase tracking-widest flex items-center justify-center gap-3">
                       <Save size={24} /> Save Product Changes
                     </button>
                   </div>

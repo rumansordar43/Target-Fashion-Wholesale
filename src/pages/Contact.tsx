@@ -68,7 +68,7 @@ export default function Contact() {
         </div>
 
         {/* Contact Form */}
-        <div className="bg-white text-deep-black p-12 md:p-16 rounded-[3rem]">
+        <div className="bg-dark-card text-text-primary p-12 md:p-16 rounded-[3rem] border border-border-subtle">
           <h2 className="text-3xl font-black mb-8 uppercase">Send a Message</h2>
           <form className="space-y-6">
             <div>
@@ -76,7 +76,7 @@ export default function Contact() {
               <input 
                 type="text" 
                 placeholder="Full Name"
-                className="w-full bg-deep-black/5 border-b-2 border-deep-black/10 p-4 focus:border-royal-gold outline-none transition-all font-bold"
+                className="w-full bg-deep-black border-b-2 border-border-subtle p-4 focus:border-royal-gold outline-none transition-all font-bold text-text-primary"
               />
             </div>
             <div>
@@ -84,7 +84,7 @@ export default function Contact() {
               <input 
                 type="tel" 
                 placeholder="Phone Number"
-                className="w-full bg-deep-black/5 border-b-2 border-deep-black/10 p-4 focus:border-royal-gold outline-none transition-all font-bold"
+                className="w-full bg-deep-black border-b-2 border-border-subtle p-4 focus:border-royal-gold outline-none transition-all font-bold text-text-primary"
               />
             </div>
             <div>
@@ -92,10 +92,10 @@ export default function Contact() {
               <textarea 
                 rows={4}
                 placeholder="How can we help you?"
-                className="w-full bg-deep-black/5 border-b-2 border-deep-black/10 p-4 focus:border-royal-gold outline-none transition-all font-bold resize-none"
+                className="w-full bg-deep-black border-b-2 border-border-subtle p-4 focus:border-royal-gold outline-none transition-all font-bold resize-none text-text-primary"
               ></textarea>
             </div>
-            <button className="w-full bg-deep-black text-white py-6 rounded-full font-black text-xl uppercase hover:bg-royal-gold hover:text-deep-black transition-all">
+            <button className="w-full bg-royal-gold text-text-primary py-6 rounded-full font-black text-xl uppercase hover:bg-text-primary hover:text-deep-black transition-all">
               Send Message
             </button>
           </form>
@@ -103,14 +103,14 @@ export default function Contact() {
       </div>
 
       {/* Large WhatsApp CTA */}
-      <div className="bg-royal-gold text-deep-black p-12 md:p-24 rounded-[4rem] text-center">
+      <div className="bg-royal-gold text-text-primary p-12 md:p-24 rounded-[4rem] text-center">
         <h2 className="text-4xl md:text-7xl font-black mb-8 uppercase leading-none">Fastest Support <br />via WhatsApp</h2>
         <p className="text-xl font-medium bangla mb-12 max-w-2xl mx-auto">
           যেকোনো জরুরি প্রয়োজনে আমাদের সরাসরি হোয়াটসঅ্যাপে মেসেজ দিন। আমাদের টিম আপনাকে দ্রুত সহায়তা করবে।
         </p>
         <a 
           href="https://wa.me/8801856078978" 
-          className="inline-flex items-center gap-4 bg-deep-black text-white px-16 py-8 rounded-full font-black text-2xl hover:bg-white hover:text-deep-black transition-all"
+          className="inline-flex items-center gap-4 bg-deep-black text-off-white px-16 py-8 rounded-full font-black text-2xl hover:bg-off-white hover:text-deep-black transition-all"
         >
           <MessageSquare size={32} />
           WhatsApp Now
