@@ -113,7 +113,7 @@ export default function Cart() {
             </Link>
             
             <p className="mt-6 text-center text-xs text-off-white/30 bangla">
-              * পাইকারি অর্ডারের জন্য চেকআউট করার পর আমাদের টিম যোগাযোগ করবে।
+              * অর্ডার করার পর আমাদের টিম আপনার সাথে যোগাযোগ করবে।
             </p>
           </div>
         </div>

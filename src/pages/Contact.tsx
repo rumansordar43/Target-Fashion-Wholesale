@@ -7,7 +7,7 @@ export default function Contact() {
       <div className="text-center mb-24">
         <h1 className="text-5xl md:text-8xl font-black mb-8 leading-none uppercase">Get In <span className="text-royal-gold">Touch</span></h1>
         <p className="text-lg text-off-white/60 bangla max-w-2xl mx-auto">
-          পাইকারি অর্ডার বা যেকোনো জিজ্ঞাসায় আমাদের সাথে যোগাযোগ করুন। আমরা দ্রুত উত্তর দেওয়ার চেষ্টা করি।
+          যেকোনো জিজ্ঞাসায় আমাদের সাথে যোগাযোগ করুন। আমরা দ্রুত উত্তর দেওয়ার চেষ্টা করি।
         </p>
       </div>
 

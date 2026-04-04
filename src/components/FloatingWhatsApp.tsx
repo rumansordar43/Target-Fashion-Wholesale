@@ -3,7 +3,7 @@ import { MessageSquare } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const FloatingWhatsApp: React.FC = () => {
-  const message = "আমি Prism Kicks থেকে পাইকারি নিতে চাই";
+  const message = "আমি Prism Kicks থেকে অর্ডার করতে চাই";
   const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(message)}`;
 
   return (
@@ -20,7 +20,7 @@ const FloatingWhatsApp: React.FC = () => {
     >
       <MessageSquare size={32} />
       <span className="absolute right-full mr-4 bg-white text-deep-black px-4 py-2 rounded-xl font-bold text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-xl pointer-events-none bangla">
-        পাইকারি নিতে চান? হোয়াটসঅ্যাপ করুন
+        অর্ডার করতে চান? হোয়াটসঅ্যাপ করুন
       </span>
     </motion.a>
   );

@@ -91,14 +91,16 @@ const announcementBarDefault = JSON.stringify({
 });
 
 db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)").run("announcement_bar", announcementBarDefault);
+db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)").run("benefits_section_image", "https://picsum.photos/seed/customer-benefit/1000/1000");
 
 // Admin Middleware (Simple token check for demo)
-const ADMIN_TOKEN = "prism-admin-secret-2026";
+const ADMIN_TOKEN = "prism_admin_2025";
 const isAdmin = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const token = req.headers["x-admin-token"];
   if (token === ADMIN_TOKEN) {
     next();
   } else {
+    console.warn(`Unauthorized admin access attempt with token: ${token}`);
     res.status(401).json({ error: "Unauthorized" });
   }
 };
@@ -108,6 +110,7 @@ const productCount = db.prepare("SELECT COUNT(*) as count FROM products").get() 
 const categoryCount = db.prepare("SELECT COUNT(*) as count FROM categories").get() as { count: number };
 
 if (categoryCount.count === 0) {
+  console.log("Seeding categories...");
   const categories = [
     { title: "Solid", slug: "solid", image_url: "https://picsum.photos/seed/solid/800/1000" },
     { title: "Graphic", slug: "graphic", image_url: "https://picsum.photos/seed/graphic/800/1000" },
@@ -119,9 +122,11 @@ if (categoryCount.count === 0) {
 
   const insertCategory = db.prepare("INSERT INTO categories (title, slug, image_url) VALUES (?, ?, ?)");
   categories.forEach(cat => insertCategory.run(cat.title, cat.slug, cat.image_url));
+  console.log("Categories seeded successfully.");
 }
 
 if (productCount.count === 0) {
+  console.log("Seeding products...");
   const insert = db.prepare(`
     INSERT INTO products (
       title, sku, slug, category, retail_price, 
@@ -260,6 +265,7 @@ if (productCount.count === 0) {
       p.fabric, p.gsm, p.sizes, p.colors, p.stock, p.tags, p.status, p.popular
     );
   });
+  console.log("Products seeded successfully.");
 }
 
 async function startServer() {
@@ -353,6 +359,27 @@ async function startServer() {
     }
   });
 
+  app.get("/api/settings", (req, res) => {
+    const settings = db.prepare("SELECT * FROM settings").all() as { key: string, value: string }[];
+    const settingsMap = settings.reduce((acc: any, curr) => {
+      try {
+        acc[curr.key] = JSON.parse(curr.value);
+      } catch (e) {
+        acc[curr.key] = curr.value;
+      }
+      return acc;
+    }, {});
+    res.json(settingsMap);
+  });
+
+  app.post("/api/admin/settings", isAdmin, (req, res) => {
+    const { key, value } = req.body;
+    if (!key) return res.status(400).json({ error: "Key is required" });
+    const stringValue = typeof value === 'string' ? value : JSON.stringify(value);
+    db.prepare("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)").run(key, stringValue);
+    res.json({ success: true });
+  });
+
   app.get("/api/announcement-bar", (req, res) => {
     const setting = db.prepare("SELECT value FROM settings WHERE key = ?").get("announcement_bar") as { value: string } | undefined;
     if (setting) {
@@ -377,21 +404,26 @@ async function startServer() {
   app.post("/api/admin/categories", isAdmin, (req, res) => {
     const { title, slug, image_url, description } = req.body;
     try {
+      if (!title || !slug || !image_url) {
+        return res.status(400).json({ success: false, error: "Missing required fields" });
+      }
       const stmt = db.prepare("INSERT INTO categories (title, slug, image_url, description) VALUES (?, ?, ?, ?)");
-      const result = stmt.run(title, slug, image_url, description);
+      const result = stmt.run(title, slug, image_url, description || "");
       res.status(201).json({ success: true, id: result.lastInsertRowid });
-    } catch (error) {
-      res.status(400).json({ success: false, error: "Slug must be unique" });
+    } catch (error: any) {
+      console.error("Category create error:", error);
+      res.status(400).json({ success: false, error: error.message || "Slug must be unique" });
     }
   });
 
   app.put("/api/admin/categories/:id", isAdmin, (req, res) => {
     const { title, slug, image_url, description } = req.body;
     try {
-      db.prepare("UPDATE categories SET title = ?, slug = ?, image_url = ?, description = ? WHERE id = ?").run(title, slug, image_url, description, req.params.id);
+      db.prepare("UPDATE categories SET title = ?, slug = ?, image_url = ?, description = ? WHERE id = ?").run(title, slug, image_url, description || "", req.params.id);
       res.json({ success: true });
-    } catch (error) {
-      res.status(400).json({ success: false, error: "Failed to update category" });
+    } catch (error: any) {
+      console.error("Category update error:", error);
+      res.status(400).json({ success: false, error: error.message || "Failed to update category" });
     }
   });
 
@@ -436,43 +468,58 @@ async function startServer() {
   });
 
   app.post("/api/admin/products", isAdmin, (req, res) => {
-    const p = req.body;
-    const stmt = db.prepare(`
-      INSERT INTO products (
-        title, sku, slug, category, retail_price, 
-        image_url, image_url_2, gallery, description, badge, 
-        fabric, gsm, sizes, colors, stock_count, tags, status, is_popular
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    const result = stmt.run(
-      p.title, p.sku, p.slug, p.category, p.retail_price,
-      p.image_url, p.image_url_2, JSON.stringify(p.gallery), p.description, p.badge,
-      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0
-    );
-    res.json({ success: true, id: result.lastInsertRowid });
+    try {
+      const p = req.body;
+      const stmt = db.prepare(`
+        INSERT INTO products (
+          title, sku, slug, category, retail_price, 
+          image_url, image_url_2, gallery, description, badge, 
+          fabric, gsm, sizes, colors, stock_count, tags, status, is_popular
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      const result = stmt.run(
+        p.title || "", p.sku || "", p.slug || "", p.category || "", p.retail_price || 0,
+        p.image_url || "", p.image_url_2 || "", JSON.stringify(p.gallery || []), p.description || "", p.badge || "",
+        p.fabric || "", p.gsm || "", JSON.stringify(p.sizes || []), JSON.stringify(p.colors || []), p.stock_count || 0, JSON.stringify(p.tags || []), p.status || "Active", p.is_popular ? 1 : 0
+      );
+      res.json({ success: true, id: result.lastInsertRowid });
+    } catch (error: any) {
+      console.error("Error adding product:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
   });
 
   app.put("/api/admin/products/:id", isAdmin, (req, res) => {
-    const p = req.body;
-    const stmt = db.prepare(`
-      UPDATE products SET 
-        title = ?, sku = ?, slug = ?, category = ?, retail_price = ?, 
-        image_url = ?, image_url_2 = ?, gallery = ?, description = ?, badge = ?, 
-        fabric = ?, gsm = ?, sizes = ?, colors = ?, stock_count = ?, tags = ?, status = ?, is_popular = ?
-      WHERE id = ?
-    `);
-    stmt.run(
-      p.title, p.sku, p.slug, p.category, p.retail_price,
-      p.image_url, p.image_url_2, JSON.stringify(p.gallery), p.description, p.badge,
-      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0,
-      req.params.id
-    );
-    res.json({ success: true });
+    try {
+      const p = req.body;
+      const stmt = db.prepare(`
+        UPDATE products SET 
+          title = ?, sku = ?, slug = ?, category = ?, retail_price = ?, 
+          image_url = ?, image_url_2 = ?, gallery = ?, description = ?, badge = ?, 
+          fabric = ?, gsm = ?, sizes = ?, colors = ?, stock_count = ?, tags = ?, status = ?, is_popular = ?
+        WHERE id = ?
+      `);
+      stmt.run(
+        p.title || "", p.sku || "", p.slug || "", p.category || "", p.retail_price || 0,
+        p.image_url || "", p.image_url_2 || "", JSON.stringify(p.gallery || []), p.description || "", p.badge || "",
+        p.fabric || "", p.gsm || "", JSON.stringify(p.sizes || []), JSON.stringify(p.colors || []), p.stock_count || 0, JSON.stringify(p.tags || []), p.status || "Active", p.is_popular ? 1 : 0,
+        req.params.id
+      );
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
   });
 
   app.delete("/api/admin/products/:id", isAdmin, (req, res) => {
-    db.prepare("DELETE FROM products WHERE id = ?").run(req.params.id);
-    res.json({ success: true });
+    try {
+      db.prepare("DELETE FROM products WHERE id = ?").run(req.params.id);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Error deleting product:", error);
+      res.status(500).json({ success: false, error: error.message });
+    }
   });
 
   // Mock Notification Service

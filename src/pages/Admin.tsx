@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { LogoName } from '../components/Logo';
 
-const ADMIN_TOKEN = "prism-admin-secret-2026";
+const ADMIN_TOKEN = "prism_admin_2025";
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,10 +38,13 @@ export default function Admin() {
   const [categories, setCategories] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>({
-    enabled: true,
-    text: '',
-    backgroundColor: '#800000',
-    textColor: '#ffffff'
+    announcement_bar: {
+      enabled: true,
+      text: '',
+      backgroundColor: '#800000',
+      textColor: '#ffffff'
+    },
+    benefits_section_image: ''
   });
   const [loading, setLoading] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -94,8 +97,19 @@ export default function Admin() {
       if (oRes.ok) setOrders(await oRes.json());
       if (cRes.ok) setCategories(await cRes.json());
       
-      const sRes = await fetch(`/api/announcement-bar?t=${Date.now()}`);
-      if (sRes.ok) setSettings(await sRes.json());
+      const sRes = await fetch(`/api/settings?t=${Date.now()}`);
+      if (sRes.ok) {
+        const data = await sRes.json();
+        setSettings({
+          announcement_bar: data.announcement_bar || {
+            enabled: true,
+            text: '',
+            backgroundColor: '#800000',
+            textColor: '#ffffff'
+          },
+          benefits_section_image: data.benefits_section_image || ''
+        });
+      }
     } catch (error) {
       console.error("Fetch error:", error);
     } finally {
@@ -151,12 +165,17 @@ export default function Admin() {
         },
         body: JSON.stringify(productToSave)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success) {
         setIsProductModalOpen(false);
         fetchAllData();
+        alert("Product saved successfully!");
+      } else {
+        alert("Error saving product: " + (data.error || "Unknown error"));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Save product error:", error);
+      alert("Failed to save product. Please check your connection.");
     }
   };
 
@@ -174,12 +193,17 @@ export default function Admin() {
         },
         body: JSON.stringify(editingCategory)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success) {
         setIsCategoryModalOpen(false);
         fetchAllData();
+        alert("Collection saved successfully!");
+      } else {
+        alert("Error saving collection: " + (data.error || "Unknown error"));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Save category error:", error);
+      alert("Failed to save collection. Please check your connection.");
     }
   };
 
@@ -196,19 +220,20 @@ export default function Admin() {
     }
   };
 
-  const handleSaveSettings = async () => {
+  const handleSaveSettings = async (key: string, value: any) => {
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/announcement-bar', {
+      const res = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'x-admin-token': ADMIN_TOKEN 
         },
-        body: JSON.stringify(settings)
+        body: JSON.stringify({ key, value })
       });
       if (res.ok) {
         alert('Settings saved successfully!');
+        fetchAllData();
       }
     } catch (error) {
       console.error("Save settings error:", error);
@@ -351,9 +376,9 @@ export default function Admin() {
               <button 
                 onClick={() => {
                   setEditingProduct({
-                    title: '', sku: '', slug: '', category: 'Solid', retail_price: 0, wholesale_price_range: '',
+                    title: '', sku: '', slug: '', category: categories[0]?.title || 'Solid', retail_price: 0,
                     image_url: '', image_url_2: '', gallery: [], description: '', badge: '',
-                    fabric: '', gsm: '', sizes: [], colors: [], stock_count: 0, moq: 12, tags: [], status: 'Active', is_popular: false
+                    fabric: '', gsm: '', sizes: ['S', 'M', 'L', 'XL', 'XXL'], colors: [], stock_count: 0, tags: [], status: 'Active', is_popular: false
                   });
                   setIsProductModalOpen(true);
                 }}
@@ -366,11 +391,10 @@ export default function Admin() {
             <div className="bg-dark-card rounded-[2.5rem] border border-white/5 overflow-hidden">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-white/5 text-[10px] uppercase tracking-widest text-off-white/40">
+                  <tr className="bg-white/5 text-xs uppercase tracking-widest text-off-white/40">
                     <th className="p-6">Prism Kicks Product</th>
                     <th className="p-6">Category</th>
                     <th className="p-6">Retail Price</th>
-                    <th className="p-6">Wholesale Price</th>
                     <th className="p-6">Stock</th>
                     <th className="p-6">Status</th>
                     <th className="p-6 text-right">Actions</th>
@@ -391,19 +415,19 @@ export default function Admin() {
                             <img src={product.image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
                             <div>
                               <div className="font-bold text-sm">{product.title}</div>
-                              <div className="text-[10px] text-off-white/30">{product.sku}</div>
+                              <div className="text-xs text-off-white/30">{product.sku}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="p-6 text-sm text-off-white/60">{product.category}</td>
-                        <td className="p-6 font-bold text-royal-gold">৳{product.retail_price}</td>
+                        <td className="p-6 text-sm text-off-white/60 font-medium">{product.category}</td>
+                        <td className="p-6 font-bold text-royal-gold text-lg">৳{product.retail_price}</td>
                         <td className="p-6">
-                          <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${product.stock_count < 50 ? 'bg-red-500/20 text-red-500' : 'bg-green-500/20 text-green-500'}`}>
+                          <span className={`px-4 py-2 rounded-full text-xs font-bold ${product.stock_count < 50 ? 'bg-red-500/20 text-red-500' : 'bg-green-500/20 text-green-500'}`}>
                             {product.stock_count} in stock
                           </span>
                         </td>
                         <td className="p-6">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-off-white/40">{product.status}</span>
+                          <span className="text-xs font-bold uppercase tracking-widest text-off-white/40">{product.status}</span>
                         </td>
                         <td className="p-6 text-right">
                           <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
@@ -453,10 +477,10 @@ export default function Admin() {
                   <div className="h-48 relative overflow-hidden">
                     <img src={cat.image_url} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
                     <div className="absolute inset-0 bg-gradient-to-t from-deep-black to-transparent opacity-60" />
-                    <div className="absolute bottom-6 left-6">
-                      <h4 className="text-xl font-black uppercase tracking-tighter">{cat.title}</h4>
-                      <p className="text-[10px] text-off-white/40 font-mono uppercase tracking-widest">/{cat.slug}</p>
-                    </div>
+                      <div className="absolute bottom-6 left-6">
+                        <h4 className="text-2xl font-black uppercase tracking-tighter">{cat.title}</h4>
+                        <p className="text-xs text-off-white/40 font-mono uppercase tracking-widest">/{cat.slug}</p>
+                      </div>
                   </div>
                   <div className="p-6 flex justify-end gap-2">
                     <button 
@@ -551,7 +575,8 @@ export default function Admin() {
         )}
 
         {activeTab === 'settings' && (
-          <div className="max-w-2xl space-y-8">
+          <div className="max-w-2xl space-y-8 pb-20">
+            {/* Announcement Bar Settings */}
             <div className="bg-dark-card p-12 rounded-[3rem] border border-white/5 shadow-2xl">
               <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter flex items-center gap-3">
                 <BarChart3 className="text-royal-gold" /> Announcement Bar
@@ -564,10 +589,10 @@ export default function Admin() {
                     <p className="text-[10px] text-off-white/40 bangla">ব্যানারটি ওয়েবসাইটে দেখাবে কি না তা নির্ধারণ করুন।</p>
                   </div>
                   <button 
-                    onClick={() => setSettings({...settings, enabled: !settings.enabled})}
-                    className={`w-16 h-8 rounded-full transition-all relative ${settings.enabled ? 'bg-royal-gold' : 'bg-white/10'}`}
+                    onClick={() => setSettings({...settings, announcement_bar: {...settings.announcement_bar, enabled: !settings.announcement_bar.enabled}})}
+                    className={`w-16 h-8 rounded-full transition-all relative ${settings.announcement_bar.enabled ? 'bg-royal-gold' : 'bg-white/10'}`}
                   >
-                    <div className={`absolute top-1 w-6 h-6 rounded-full bg-deep-black transition-all ${settings.enabled ? 'left-9' : 'left-1'}`} />
+                    <div className={`absolute top-1 w-6 h-6 rounded-full bg-deep-black transition-all ${settings.announcement_bar.enabled ? 'left-9' : 'left-1'}`} />
                   </button>
                 </div>
 
@@ -576,8 +601,8 @@ export default function Admin() {
                   <textarea 
                     rows={3}
                     className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all resize-none font-bold"
-                    value={settings.text}
-                    onChange={e => setSettings({...settings, text: e.target.value})}
+                    value={settings.announcement_bar.text}
+                    onChange={e => setSettings({...settings, announcement_bar: {...settings.announcement_bar, text: e.target.value}})}
                     placeholder="Enter announcement text..."
                   />
                 </div>
@@ -589,14 +614,14 @@ export default function Admin() {
                       <input 
                         type="color" 
                         className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
-                        value={settings.backgroundColor}
-                        onChange={e => setSettings({...settings, backgroundColor: e.target.value})}
+                        value={settings.announcement_bar.backgroundColor}
+                        onChange={e => setSettings({...settings, announcement_bar: {...settings.announcement_bar, backgroundColor: e.target.value}})}
                       />
                       <input 
                         type="text" 
                         className="flex-1 bg-deep-black border border-white/10 rounded-xl px-4 outline-none focus:border-royal-gold transition-all font-mono text-sm uppercase"
-                        value={settings.backgroundColor}
-                        onChange={e => setSettings({...settings, backgroundColor: e.target.value})}
+                        value={settings.announcement_bar.backgroundColor}
+                        onChange={e => setSettings({...settings, announcement_bar: {...settings.announcement_bar, backgroundColor: e.target.value}})}
                       />
                     </div>
                   </div>
@@ -606,14 +631,14 @@ export default function Admin() {
                       <input 
                         type="color" 
                         className="w-12 h-12 rounded-xl bg-transparent border-none cursor-pointer"
-                        value={settings.textColor}
-                        onChange={e => setSettings({...settings, textColor: e.target.value})}
+                        value={settings.announcement_bar.textColor}
+                        onChange={e => setSettings({...settings, announcement_bar: {...settings.announcement_bar, textColor: e.target.value}})}
                       />
                       <input 
                         type="text" 
                         className="flex-1 bg-deep-black border border-white/10 rounded-xl px-4 outline-none focus:border-royal-gold transition-all font-mono text-sm uppercase"
-                        value={settings.textColor}
-                        onChange={e => setSettings({...settings, textColor: e.target.value})}
+                        value={settings.announcement_bar.textColor}
+                        onChange={e => setSettings({...settings, announcement_bar: {...settings.announcement_bar, textColor: e.target.value}})}
                       />
                     </div>
                   </div>
@@ -621,29 +646,70 @@ export default function Admin() {
 
                 <div className="pt-8">
                   <button 
-                    onClick={handleSaveSettings}
+                    onClick={() => handleSaveSettings('announcement_bar', settings.announcement_bar)}
                     disabled={loading}
                     className="w-full bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-royal-gold/20"
                   >
-                    <Save size={24} /> {loading ? 'Saving...' : 'Save Settings'}
+                    <Save size={24} /> {loading ? 'Saving...' : 'Save Banner Settings'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Benefits Section Image Settings */}
+            <div className="bg-dark-card p-12 rounded-[3rem] border border-white/5 shadow-2xl">
+              <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter flex items-center gap-3">
+                <ImageIcon className="text-royal-gold" /> Benefits Section Image
+              </h3>
+              
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <label className="block text-[10px] uppercase tracking-widest text-off-white/40 font-bold ml-2">Image URL</label>
+                  <input 
+                    type="url"
+                    className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all font-bold"
+                    value={settings.benefits_section_image}
+                    onChange={e => setSettings({...settings, benefits_section_image: e.target.value})}
+                    placeholder="Enter image URL..."
+                  />
+                </div>
+
+                {settings.benefits_section_image && (
+                  <div className="aspect-video rounded-2xl overflow-hidden border border-white/10">
+                    <img 
+                      src={settings.benefits_section_image} 
+                      className="w-full h-full object-cover" 
+                      alt="Preview" 
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                )}
+
+                <div className="pt-8">
+                  <button 
+                    onClick={() => handleSaveSettings('benefits_section_image', settings.benefits_section_image)}
+                    disabled={loading}
+                    className="w-full bg-royal-gold text-deep-black py-5 rounded-2xl font-black hover:bg-white transition-all uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl shadow-royal-gold/20"
+                  >
+                    <Save size={24} /> {loading ? 'Saving...' : 'Save Image Setting'}
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="bg-royal-gold/5 p-8 rounded-[2rem] border border-royal-gold/10">
-              <h4 className="text-royal-gold font-bold uppercase tracking-widest text-xs mb-4">Preview</h4>
-              {!settings.enabled ? (
+              <h4 className="text-royal-gold font-bold uppercase tracking-widest text-xs mb-4">Banner Preview</h4>
+              {!settings.announcement_bar.enabled ? (
                 <div className="py-8 text-center text-off-white/20 border border-dashed border-white/10 rounded-xl uppercase tracking-widest text-[10px] font-bold">
                   Banner is currently disabled
                 </div>
               ) : (
                 <div 
                   className="py-3 px-6 rounded-xl overflow-hidden whitespace-nowrap relative"
-                  style={{ backgroundColor: settings.backgroundColor, color: settings.textColor }}
+                  style={{ backgroundColor: settings.announcement_bar.backgroundColor, color: settings.announcement_bar.textColor }}
                 >
                   <div className="animate-marquee inline-block font-bold text-xs uppercase">
-                    {settings.text} &nbsp;&nbsp;&nbsp;&nbsp; {settings.text}
+                    {settings.announcement_bar.text} &nbsp;&nbsp;&nbsp;&nbsp; {settings.announcement_bar.text}
                   </div>
                 </div>
               )}
@@ -874,6 +940,46 @@ export default function Admin() {
                       </select>
                     </div>
                     <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Fabric</label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                        value={editingProduct.fabric}
+                        onChange={e => setEditingProduct({...editingProduct, fabric: e.target.value})}
+                        placeholder="e.g. 100% Cotton"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">GSM</label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                        value={editingProduct.gsm}
+                        onChange={e => setEditingProduct({...editingProduct, gsm: e.target.value})}
+                        placeholder="e.g. 180-190"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Sizes (Comma separated)</label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                        value={Array.isArray(editingProduct.sizes) ? editingProduct.sizes.join(', ') : ''}
+                        onChange={e => setEditingProduct({...editingProduct, sizes: e.target.value.split(',').map(s => s.trim()).filter(s => s)})}
+                        placeholder="S, M, L, XL, XXL"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Tags (Comma separated)</label>
+                      <input 
+                        type="text" 
+                        className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                        value={Array.isArray(editingProduct.tags) ? editingProduct.tags.join(', ') : ''}
+                        onChange={e => setEditingProduct({...editingProduct, tags: e.target.value.split(',').map(s => s.trim()).filter(s => s)})}
+                        placeholder="new-arrival, featured, hot"
+                      />
+                    </div>
+                    <div>
                       <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Description</label>
                       <textarea 
                         rows={4}
@@ -922,8 +1028,8 @@ function StatCard({ label, value, icon, color }: any) {
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-6 ${colors[color]}`}>
         {icon}
       </div>
-      <div className="text-3xl font-black mb-1">{value}</div>
-      <div className="text-[10px] uppercase tracking-widest text-off-white/40 font-bold">{label}</div>
+      <div className="text-4xl font-black mb-1">{value}</div>
+      <div className="text-xs uppercase tracking-widest text-off-white/40 font-bold">{label}</div>
     </div>
   );
 }

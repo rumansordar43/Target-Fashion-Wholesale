@@ -16,44 +16,43 @@ export default function HowToOrder() {
 
   const steps = [
     { 
-      title: 'Step 1: Products দেখুন', 
-      desc: 'আমাদের ক্যাটালগ browse করুন এবং আপনার পছন্দের ডিজাইনগুলো খুঁজে বের করুন।', 
+      title: 'Step 1: প্রোডাক্ট পছন্দ করুন', 
+      desc: 'আমাদের ক্যাটালগ ব্রাউজ করুন এবং আপনার পছন্দের ডিজাইন ও সাইজ খুঁজে বের করুন।', 
       icon: <Search size={32} /> 
     },
     { 
-      title: 'Step 2: পছন্দ করুন', 
-      desc: 'পছন্দমতো product name, color, size এবং quantity একটি লিস্টে নোট করুন।', 
-      icon: <CheckSquare size={32} /> 
-    },
-    { 
-      title: 'Step 3: WhatsApp করুন', 
-      desc: 'আমাদের হোয়াটসঅ্যাপ নম্বরে আপনার পছন্দের লিস্টটি পাঠিয়ে দিন।', 
-      icon: <MessageSquare size={32} /> 
-    },
-    { 
-      title: 'Step 4: Wholesale Price জানুন', 
-      desc: 'আমরা আপনার লিস্ট অনুযায়ী পাইকারি মূল্য এবং স্টক আপডেট সাথে সাথে জানিয়ে দেব।', 
+      title: 'Step 2: কার্টে যুক্ত করুন', 
+      desc: 'পছন্দমতো প্রোডাক্টের সাইজ সিলেক্ট করে "Add to Cart" বাটনে ক্লিক করুন।', 
       icon: <ShoppingBag size={32} /> 
     },
     { 
-      title: 'Step 5: Order Confirm করুন', 
-      desc: 'অর্ডার কনফার্ম করতে আংশিক অগ্রিম বা COD (শর্তসাপেক্ষে) কনফার্ম করুন।', 
+      title: 'Step 3: চেকআউট করুন', 
+      desc: 'কার্ট পেজ থেকে "Checkout" বাটনে ক্লিক করে আপনার নাম, ঠিকানা এবং মোবাইল নম্বর দিন।', 
+      icon: <CheckSquare size={32} /> 
+    },
+    { 
+      title: 'Step 4: অর্ডার কনফার্ম করুন', 
+      desc: 'পেমেন্ট মেথড (ক্যাশ অন ডেলিভারি বা অনলাইন) সিলেক্ট করে অর্ডারটি কনফার্ম করুন।', 
       icon: <CreditCard size={32} /> 
     },
     { 
-      title: 'Step 6: Delivery পাবেন', 
-      desc: '১-৫ কার্যদিবসের মধ্যে সারা বাংলাদেশে কুরিয়ারের মাধ্যমে ডেলিভারি বুঝে নিন।', 
+      title: 'Step 5: কনফার্মেশন কল', 
+      desc: 'অর্ডার করার পর আমাদের কাস্টমার কেয়ার থেকে আপনাকে কল করে অর্ডারটি কনফার্ম করা হবে।', 
+      icon: <MessageSquare size={32} /> 
+    },
+    { 
+      title: 'Step 6: ডেলিভারি বুঝে নিন', 
+      desc: '১-৫ কার্যদিবসের মধ্যে সারা বাংলাদেশে কুরিয়ারের মাধ্যমে আপনার ঠিকানায় ডেলিভারি পৌঁছে যাবে।', 
       icon: <Truck size={32} /> 
     },
   ];
 
-  const template = `আমি Prism Kicks থেকে পাইকারি নিতে চাই।
+  const template = `আমি Prism Kicks থেকে এই প্রোডাক্টটি অর্ডার করতে চাই:
 Product: [নাম]
-Color: [রঙ]
 Size: [S/M/L/XL/XXL]
-Quantity: [কত পিস]
 আমার নাম: [নাম]
-জেলা: [জেলা]`;
+ঠিকানা: [বিস্তারিত ঠিকানা]
+মোবাইল: [নম্বর]`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(template);
@@ -66,7 +65,7 @@ Quantity: [কত পিস]
       <div className="text-center mb-24">
         <h1 className="text-5xl md:text-8xl font-black mb-8 leading-none uppercase">How to <span className="text-royal-gold">Order</span></h1>
         <p className="text-lg text-off-white/60 bangla max-w-2xl mx-auto">
-          প্রিজম কিকস থেকে পাইকারি অর্ডার করার সহজ ধাপগুলো নিচে দেওয়া হলো। আমাদের প্রসেস অত্যন্ত স্বচ্ছ এবং দ্রুত।
+          প্রিজম কিকস থেকে আপনার পছন্দের টি-শার্ট অর্ডার করার সহজ ধাপগুলো নিচে দেওয়া হলো। আমাদের প্রসেস অত্যন্ত স্বচ্ছ এবং দ্রুত।
         </p>
       </div>
       

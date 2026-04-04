@@ -66,7 +66,7 @@ export default function ProductDetail() {
   if (loading) return <div className="h-screen flex items-center justify-center text-royal-gold font-bold">Loading Product...</div>;
   if (!product) return <div className="h-screen flex items-center justify-center text-crimson-red font-bold">Product not found</div>;
 
-  const whatsappMessage = `আমি ${product.title} এর পাইকারি মূল্য জানতে চাই। Quantity: ___ পিস।`;
+  const whatsappMessage = `আমি ${product.title} এই প্রোডাক্টটি অর্ডার করতে চাই।`;
   const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (

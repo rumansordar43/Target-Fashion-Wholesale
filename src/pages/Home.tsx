@@ -20,6 +20,7 @@ import { Product } from '../types';
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [benefitsImage, setBenefitsImage] = useState("https://picsum.photos/seed/customer-benefit/1000/1000");
 
   useEffect(() => {
     fetch('/api/products')
@@ -30,6 +31,15 @@ export default function Home() {
     fetch('/api/categories')
       .then(res => res.json())
       .then(data => setCategories(data))
+      .catch(err => console.error(err));
+
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data.benefits_section_image) {
+          setBenefitsImage(data.benefits_section_image);
+        }
+      })
       .catch(err => console.error(err));
   }, []);
 
@@ -248,7 +258,7 @@ export default function Home() {
           <div className="flex-1 w-full">
             <div className="aspect-square rounded-[3rem] overflow-hidden rotate-3 hover:rotate-0 transition-transform duration-700 shadow-2xl">
               <img 
-                src="https://picsum.photos/seed/customer-benefit/1000/1000" 
+                src={benefitsImage} 
                 className="w-full h-full object-cover" 
                 alt="Customer Benefits"
                 referrerPolicy="no-referrer"
