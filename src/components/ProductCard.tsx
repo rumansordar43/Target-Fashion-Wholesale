@@ -6,14 +6,10 @@ import { Product } from '../types';
 
 interface ProductCardProps {
   product: Product;
-  onInquiry: (product?: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
-
-  const whatsappMessage = `আমি ${product.title} এর পাইকারি মূল্য জানতে চাই। Quantity: ___ পিস।`;
-  const whatsappUrl = `https://wa.me/8801856078978?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
     <motion.div 
@@ -68,20 +64,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onInquiry }) => {
         
         <div className="flex justify-between items-center mb-6">
           <div className="flex flex-col">
-            <span className="text-xs text-off-white/40 uppercase tracking-widest">Retail Price</span>
-            <span className="text-xl font-black text-maroon">৳{product.retail_price} <span className="text-xs font-normal">থেকে</span></span>
+            <span className="text-xs text-off-white/40 uppercase tracking-widest">Price</span>
+            <span className="text-xl font-black text-maroon">৳{product.retail_price}</span>
           </div>
         </div>
 
         <div className="mt-auto">
-          <a 
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link 
+            to={`/product/${product.slug}`}
             className="w-full bg-border-subtle hover:bg-maroon text-text-primary hover:text-white py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 text-sm bangla"
           >
-            <MessageSquare size={18} /> Wholesale Price জানুন
-          </a>
+            বিস্তারিত দেখুন
+          </Link>
         </div>
       </div>
     </motion.div>

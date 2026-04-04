@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 
-export default function Category({ openInquiry }: { openInquiry: (product?: Product) => void }) {
+export default function Category() {
   const { name } = useParams<{ name: string }>();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ export default function Category({ openInquiry }: { openInquiry: (product?: Prod
     <div className="py-24 px-4 max-w-7xl mx-auto">
       <div className="mb-16">
         <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase">{categoryName}</h1>
-        <p className="text-royal-gold font-semibold tracking-widest uppercase text-sm bangla">পাইকারি কালেকশন</p>
+        <p className="text-royal-gold font-semibold tracking-widest uppercase text-sm bangla">কালেকশন</p>
       </div>
 
       {products.length === 0 ? (
@@ -38,7 +38,7 @@ export default function Category({ openInquiry }: { openInquiry: (product?: Prod
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} onInquiry={openInquiry} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}

@@ -21,7 +21,7 @@ import MobileStickyBar from './MobileStickyBar';
 import { useCart } from '../CartContext';
 import { LogoName } from './Logo';
 
-export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
@@ -63,7 +63,6 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
     { name: 'Home', path: '/' },
     { name: 'New Arrivals', path: '/new-arrivals' },
     { name: 'Offers', path: '/offers' },
-    { name: 'Reseller হন', path: '/reseller' },
     { name: 'কীভাবে অর্ডার করবেন', path: '/how-to-order' },
     { name: 'About Us', path: '/about' },
   ];
@@ -112,7 +111,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </Link>
             
             {/* Middle: Nav Links */}
-            <div className="hidden lg:flex items-center gap-2 xl:gap-4 2xl:gap-7 font-bold text-[10px] xl:text-[12px] 2xl:text-[14px] uppercase tracking-wider whitespace-nowrap">
+            <div className="hidden lg:flex items-center gap-4 xl:gap-8 2xl:gap-12 font-bold text-[13px] xl:text-[15px] 2xl:text-[17px] uppercase tracking-wider whitespace-nowrap">
               <Link to="/" className={`hover:text-royal-gold transition-colors ${location.pathname === '/' ? 'text-royal-gold' : ''}`}>Home</Link>
               
               {/* Products Dropdown */}
@@ -179,12 +178,6 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
                     {totalItems}
                   </span>
                 )}
-              </Link>
-              <Link 
-                to="/reseller"
-                className="hidden lg:flex items-center gap-1.5 xl:gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-3 xl:px-6 py-2 xl:py-3 rounded-full font-bold text-[10px] xl:text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20 whitespace-nowrap"
-              >
-                RESELLER হন
               </Link>
               <button 
                 onClick={() => setIsMenuOpen(true)}
@@ -259,13 +252,6 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
               </div>
 
               <div className="mt-auto pt-8 border-t border-border-subtle flex flex-col gap-4">
-                <Link 
-                  to="/reseller" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="bg-royal-gold text-deep-black py-4 rounded-xl font-bold uppercase tracking-widest text-center shadow-lg"
-                >
-                  Reseller হন
-                </Link>
                 <div className="flex justify-center gap-6 py-4">
                   <a href="https://www.facebook.com/share/1XSmanaXQk/" target="_blank" className="text-text-primary hover:text-royal-gold"><Facebook size={24} /></a>
                   <a href="https://wa.me/8801856078978" target="_blank" className="text-text-primary hover:text-green-500"><MessageSquare size={24} /></a>
@@ -297,7 +283,7 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
               <LogoName className="items-start" />
             </div>
             <p className="text-off-white/50 text-sm font-medium">
-              Bangladesh's Trusted T-shirt Wholesaler. Quality fabric, premium prints, and factory prices.
+              Bangladesh's Trusted T-shirt Retailer. Quality fabric, premium prints, and best prices.
             </p>
           </div>
 
@@ -307,9 +293,8 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             <ul className="space-y-4 text-off-white/60 text-sm">
               <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
               <li><Link to="/catalog" className="hover:text-white transition-colors">Products</Link></li>
-              <li><Link to="/wholesale-inquiry" className="hover:text-white transition-colors">Wholesale Inquiry</Link></li>
-              <li><Link to="/reseller" className="hover:text-white transition-colors">Reseller হন</Link></li>
               <li><Link to="/how-to-order" className="hover:text-white transition-colors">কীভাবে অর্ডার করবেন</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
             </ul>
           </div>
 

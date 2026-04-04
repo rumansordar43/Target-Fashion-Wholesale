@@ -5,7 +5,6 @@ export interface Product {
   slug: string;
   category: string;
   retail_price: number;
-  wholesale_price_range?: string; // For internal use or display logic
   image_url: string;
   image_url_2?: string;
   gallery?: string[];
@@ -16,17 +15,28 @@ export interface Product {
   sizes?: string[];
   colors?: { name: string, hex: string }[];
   stock_count?: number;
-  moq?: number;
   tags?: string[];
   status?: 'Active' | 'Inactive';
   is_popular?: boolean;
   created_at?: string;
 }
 
-export interface Inquiry {
-  name: string;
-  phone: string;
-  business_name: string;
-  message: string;
-  product_id?: number;
+export interface OrderItem {
+  product_id: number;
+  title: string;
+  quantity: number;
+  size: string;
+  color: string;
+  price: number;
+}
+
+export interface Order {
+  id: string;
+  customer_name: string;
+  customer_phone: string;
+  customer_address: string;
+  items: OrderItem[];
+  total_price: number;
+  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled';
+  created_at: string;
 }

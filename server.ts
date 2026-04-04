@@ -5,7 +5,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const db = new Database("wholesale_v2.db");
+const db = new Database("prism_retail.db");
 
 // Initialize database
 db.exec(`
@@ -78,7 +78,7 @@ db.exec(`
 // Initialize default settings
 const announcementBarDefault = JSON.stringify({
   enabled: true,
-  text: "🏪 পাইকারি মূল্যে T-shirt নিন | সারা বাংলাদেশে ডেলিভারি | Reseller-দের জন্য বিশেষ অফার",
+  text: "🏪 প্রিমিয়াম কোয়ালিটি T-shirt কিনুন | সারা বাংলাদেশে ক্যাশ অন ডেলিভারি",
   backgroundColor: "#800000",
   textColor: "#ffffff"
 });
@@ -101,10 +101,10 @@ const productCount = db.prepare("SELECT COUNT(*) as count FROM products").get() 
 if (productCount.count === 0) {
   const insert = db.prepare(`
     INSERT INTO products (
-      title, sku, slug, category, retail_price, wholesale_price_range, 
+      title, sku, slug, category, retail_price, 
       image_url, image_url_2, gallery, description, badge, 
-      fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      fabric, gsm, sizes, colors, stock_count, tags, status, is_popular
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
 
   const products = [
@@ -114,7 +114,6 @@ if (productCount.count === 0) {
       slug: "premium-solid-drop-shoulder",
       category: "Solid",
       price: 550,
-      wholesale: "৳200–৳350",
       img1: "https://picsum.photos/seed/t1f/800/1000",
       img2: "https://picsum.photos/seed/t1b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t1f/800/1000", "https://picsum.photos/seed/t1b/800/1000", "https://picsum.photos/seed/t1c/800/1000", "https://picsum.photos/seed/t1m/800/1000"]),
@@ -125,7 +124,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["S", "M", "L", "XL", "XXL"]),
       colors: JSON.stringify([{name: "Black", hex: "#000000"}, {name: "White", hex: "#FFFFFF"}, {name: "Navy", hex: "#000080"}]),
       stock: 500,
-      moq: 12,
       tags: JSON.stringify(["new-arrival", "featured"]),
       status: "Active",
       popular: 1
@@ -136,7 +134,6 @@ if (productCount.count === 0) {
       slug: "cyberpunk-graphic-tee",
       category: "Graphic",
       price: 650,
-      wholesale: "৳250–৳400",
       img1: "https://picsum.photos/seed/t2f/800/1000",
       img2: "https://picsum.photos/seed/t2b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t2f/800/1000", "https://picsum.photos/seed/t2b/800/1000", "https://picsum.photos/seed/t2c/800/1000"]),
@@ -147,7 +144,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["M", "L", "XL"]),
       colors: JSON.stringify([{name: "Black", hex: "#000000"}]),
       stock: 300,
-      moq: 12,
       tags: JSON.stringify(["hot", "featured"]),
       status: "Active",
       popular: 1
@@ -158,7 +154,6 @@ if (productCount.count === 0) {
       slug: "vintage-embroidered-polo",
       category: "Polo",
       price: 850,
-      wholesale: "৳220–৳380",
       img1: "https://picsum.photos/seed/t3f/800/1000",
       img2: "https://picsum.photos/seed/t3b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t3f/800/1000", "https://picsum.photos/seed/t3b/800/1000"]),
@@ -169,7 +164,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["S", "M", "L", "XL"]),
       colors: JSON.stringify([{name: "Royal Blue", hex: "#4169E1"}, {name: "White", hex: "#FFFFFF"}]),
       stock: 400,
-      moq: 12,
       tags: JSON.stringify(["featured"]),
       status: "Active",
       popular: 0
@@ -180,7 +174,6 @@ if (productCount.count === 0) {
       slug: "heavyweight-oversized-tee",
       category: "Oversized",
       price: 750,
-      wholesale: "৳250–৳400",
       img1: "https://picsum.photos/seed/t4f/800/1000",
       img2: "https://picsum.photos/seed/t4b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t4f/800/1000", "https://picsum.photos/seed/t4b/800/1000"]),
@@ -191,7 +184,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["M", "L", "XL", "XXL"]),
       colors: JSON.stringify([{name: "Charcoal", hex: "#36454F"}, {name: "Olive", hex: "#808000"}]),
       stock: 250,
-      moq: 12,
       tags: JSON.stringify(["new-arrival"]),
       status: "Active",
       popular: 1
@@ -202,7 +194,6 @@ if (productCount.count === 0) {
       slug: "minimalist-full-sleeve",
       category: "Full Sleeve",
       price: 600,
-      wholesale: "৳230–৳390",
       img1: "https://picsum.photos/seed/t5f/800/1000",
       img2: "https://picsum.photos/seed/t5b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t5f/800/1000", "https://picsum.photos/seed/t5b/800/1000"]),
@@ -213,7 +204,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["S", "M", "L", "XL"]),
       colors: JSON.stringify([{name: "Black", hex: "#000000"}, {name: "Grey", hex: "#808080"}]),
       stock: 350,
-      moq: 12,
       tags: JSON.stringify(["new-arrival"]),
       status: "Active",
       popular: 0
@@ -224,7 +214,6 @@ if (productCount.count === 0) {
       slug: "floral-embroidered-tee",
       category: "Embroidered",
       price: 700,
-      wholesale: "৳280–৳450",
       img1: "https://picsum.photos/seed/t6f/800/1000",
       img2: "https://picsum.photos/seed/t6b/800/1000",
       gallery: JSON.stringify(["https://picsum.photos/seed/t6f/800/1000", "https://picsum.photos/seed/t6b/800/1000"]),
@@ -235,7 +224,6 @@ if (productCount.count === 0) {
       sizes: JSON.stringify(["S", "M", "L"]),
       colors: JSON.stringify([{name: "Pink", hex: "#FFC0CB"}, {name: "White", hex: "#FFFFFF"}]),
       stock: 150,
-      moq: 12,
       tags: JSON.stringify(["hot"]),
       status: "Active",
       popular: 1
@@ -244,9 +232,9 @@ if (productCount.count === 0) {
 
   products.forEach(p => {
     insert.run(
-      p.title, p.sku, p.slug, p.category, p.price, p.wholesale, 
+      p.title, p.sku, p.slug, p.category, p.price, 
       p.img1, p.img2, p.gallery, p.desc, p.badge, 
-      p.fabric, p.gsm, p.sizes, p.colors, p.stock, p.moq, p.tags, p.status, p.popular
+      p.fabric, p.gsm, p.sizes, p.colors, p.stock, p.tags, p.status, p.popular
     );
   });
 }
@@ -259,8 +247,7 @@ async function startServer() {
 
   // Public API Routes
   app.get("/api/products", (req, res) => {
-    // Exclude wholesale_price_range from public list
-    const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular FROM products").all();
+    const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, tags, status, is_popular FROM products").all();
     const parsedProducts = products.map((p: any) => ({
       ...p,
       gallery: p.gallery ? JSON.parse(p.gallery) : [],
@@ -273,7 +260,7 @@ async function startServer() {
   });
 
   app.get("/api/products/:slug", (req, res) => {
-    const product: any = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular FROM products WHERE slug = ?").get(req.params.slug);
+    const product: any = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, tags, status, is_popular FROM products WHERE slug = ?").get(req.params.slug);
     if (product) {
       const parsedProduct = {
         ...product,
@@ -290,7 +277,7 @@ async function startServer() {
   });
 
   app.get("/api/categories/:category", (req, res) => {
-    const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular FROM products WHERE category = ?").all(req.params.category);
+    const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, tags, status, is_popular FROM products WHERE category = ?").all(req.params.category);
     const parsedProducts = products.map((p: any) => ({
       ...p,
       gallery: p.gallery ? JSON.parse(p.gallery) : [],
@@ -393,15 +380,15 @@ async function startServer() {
     const p = req.body;
     const stmt = db.prepare(`
       INSERT INTO products (
-        title, sku, slug, category, retail_price, wholesale_price_range, 
+        title, sku, slug, category, retail_price, 
         image_url, image_url_2, gallery, description, badge, 
-        fabric, gsm, sizes, colors, stock_count, moq, tags, status, is_popular
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        fabric, gsm, sizes, colors, stock_count, tags, status, is_popular
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
     const result = stmt.run(
-      p.title, p.sku, p.slug, p.category, p.retail_price, p.wholesale_price_range,
+      p.title, p.sku, p.slug, p.category, p.retail_price,
       p.image_url, p.image_url_2, JSON.stringify(p.gallery), p.description, p.badge,
-      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, p.moq, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0
+      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0
     );
     res.json({ success: true, id: result.lastInsertRowid });
   });
@@ -410,15 +397,15 @@ async function startServer() {
     const p = req.body;
     const stmt = db.prepare(`
       UPDATE products SET 
-        title = ?, sku = ?, slug = ?, category = ?, retail_price = ?, wholesale_price_range = ?, 
+        title = ?, sku = ?, slug = ?, category = ?, retail_price = ?, 
         image_url = ?, image_url_2 = ?, gallery = ?, description = ?, badge = ?, 
-        fabric = ?, gsm = ?, sizes = ?, colors = ?, stock_count = ?, moq = ?, tags = ?, status = ?, is_popular = ?
+        fabric = ?, gsm = ?, sizes = ?, colors = ?, stock_count = ?, tags = ?, status = ?, is_popular = ?
       WHERE id = ?
     `);
     stmt.run(
-      p.title, p.sku, p.slug, p.category, p.retail_price, p.wholesale_price_range,
+      p.title, p.sku, p.slug, p.category, p.retail_price,
       p.image_url, p.image_url_2, JSON.stringify(p.gallery), p.description, p.badge,
-      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, p.moq, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0,
+      p.fabric, p.gsm, JSON.stringify(p.sizes), JSON.stringify(p.colors), p.stock_count, JSON.stringify(p.tags), p.status, p.is_popular ? 1 : 0,
       req.params.id
     );
     res.json({ success: true });

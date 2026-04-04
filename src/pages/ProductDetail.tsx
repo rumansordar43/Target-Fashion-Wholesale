@@ -17,7 +17,7 @@ import {
 import { Product } from '../types';
 import { useCart } from '../CartContext';
 
-export default function ProductDetail({ openInquiry }: { openInquiry: (product?: Product) => void }) {
+export default function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
   const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
@@ -111,17 +111,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
           <h1 className="text-4xl md:text-6xl font-black mb-4 leading-tight font-cinzel uppercase tracking-tighter">{product.title}</h1>
           
           <div className="flex items-baseline gap-4 mb-8">
-            <span className="text-4xl font-black text-royal-gold">Retail: ৳{product.retail_price}</span>
-          </div>
-
-          {/* Notice Box */}
-          <div className="bg-steel-blue/10 border border-steel-blue/20 p-6 rounded-3xl mb-10 flex items-start gap-4">
-            <div className="w-10 h-10 bg-steel-blue rounded-2xl flex items-center justify-center text-white shrink-0">
-              <MessageSquare size={20} />
-            </div>
-            <p className="text-sm font-bold bangla leading-relaxed text-text-primary">
-              💼 পাইকারি মূল্যের জন্য নিচের বাটনে WhatsApp করুন। সর্বনিম্ন অর্ডার ১২ পিস।
-            </p>
+            <span className="text-4xl font-black text-royal-gold">Price: ৳{product.retail_price}</span>
           </div>
 
           {/* Specs */}
@@ -189,31 +179,18 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
                   <Plus size={16} />
                 </button>
               </div>
-              <p className="text-xs text-off-white/40 bangla">সর্বনিম্ন অর্ডার ১২ পিস (Wholesale)</p>
             </div>
           </div>
 
-          <p className="text-sm font-bold text-royal-gold mb-8 bangla flex items-center gap-2">
-            <CheckCircle2 size={16} /> পাইকারি অর্ডার: সর্বনিম্ন ১২ পিস
-          </p>
-
           {/* CTAs */}
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <button 
                 onClick={handleAddToCart}
                 className="bg-text-primary text-deep-black py-5 rounded-2xl font-black hover:bg-royal-gold hover:text-white transition-all flex items-center justify-center gap-3 text-lg uppercase tracking-widest"
               >
                 <ShoppingBag size={24} /> Add to Cart
               </button>
-              <a 
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-royal-gold text-text-primary py-5 rounded-2xl font-black hover:bg-text-primary hover:text-deep-black transition-all flex items-center justify-center gap-3 text-lg bangla"
-              >
-                <MessageSquare size={24} /> WhatsApp-এ জানুন
-              </a>
             </div>
             
             <AnimatePresence>
@@ -229,21 +206,23 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
               )}
             </AnimatePresence>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a 
+                href="https://wa.me/8801856078978"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-royal-gold text-text-primary py-4 rounded-2xl font-bold hover:bg-text-primary hover:text-deep-black transition-all flex items-center justify-center gap-2 text-sm bangla"
+              >
+                <MessageSquare size={18} /> WhatsApp-এ অর্ডার করুন
+              </a>
               <a 
                 href="https://www.facebook.com/share/1XSmanaXQk/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-[#1877F2] text-white py-4 rounded-2xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 text-sm bangla"
               >
-                <Facebook size={18} /> Facebook-এ Message
+                <Facebook size={18} /> Facebook-এ মেসেজ দিন
               </a>
-              <Link 
-                to="/wholesale-inquiry"
-                className="bg-white/5 border border-border-subtle text-off-white py-4 rounded-2xl font-bold hover:bg-text-primary hover:text-deep-black transition-all flex items-center justify-center gap-2 text-sm bangla"
-              >
-                <FileText size={18} /> Inquiry Form পূরণ করুন
-              </Link>
             </div>
           </div>
         </div>
@@ -255,7 +234,7 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
           {[
             { id: 'details', label: 'Product Details', icon: <Info size={18} /> },
             { id: 'size', label: 'Size & Fit', icon: <Ruler size={18} /> },
-            { id: 'wholesale', label: 'Wholesale Info', icon: <Truck size={18} /> },
+            { id: 'shipping', label: 'Shipping & Return', icon: <Truck size={18} /> },
           ].map(tab => (
             <button 
               key={tab.id}
@@ -325,16 +304,16 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
             </div>
           )}
 
-          {activeTab === 'wholesale' && (
+          {activeTab === 'shipping' && (
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-dark-card p-6 rounded-3xl border border-white/5 text-center">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-2">Min Order</p>
-                  <p className="text-2xl font-black text-royal-gold">12 Pcs</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-2">Delivery Time</p>
+                  <p className="text-2xl font-black text-royal-gold">2-5 Days</p>
                 </div>
                 <div className="bg-dark-card p-6 rounded-3xl border border-white/5 text-center">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-2">Packaging</p>
-                  <p className="text-2xl font-black text-royal-gold">Poly Pack</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-2">Return Policy</p>
+                  <p className="text-2xl font-black text-royal-gold">7 Days</p>
                 </div>
                 <div className="bg-dark-card p-6 rounded-3xl border border-white/5 text-center">
                   <p className="text-[10px] uppercase font-bold tracking-widest text-off-white/40 mb-2">Delivery</p>
@@ -342,19 +321,15 @@ export default function ProductDetail({ openInquiry }: { openInquiry: (product?:
                 </div>
               </div>
               <div className="bg-steel-blue/10 p-8 rounded-[2rem] border border-steel-blue/20">
-                <h4 className="font-bold mb-4 bangla">Bulk Discount Tiers</h4>
+                <h4 className="font-bold mb-4 bangla">ডেলিভারি চার্জ</h4>
                 <ul className="space-y-4 text-sm bangla text-off-white/70">
                   <li className="flex justify-between border-b border-white/5 pb-2">
-                    <span>১২ - ৪৮ পিস</span>
-                    <span className="font-bold text-white">Standard Wholesale Price</span>
+                    <span>ঢাকার ভিতরে</span>
+                    <span className="font-bold text-white">৳৭০</span>
                   </li>
                   <li className="flex justify-between border-b border-white/5 pb-2">
-                    <span>৫০ - ১০০ পিস</span>
-                    <span className="font-bold text-white">Special Discount (Contact Us)</span>
-                  </li>
-                  <li className="flex justify-between border-b border-white/5 pb-2">
-                    <span>১০০+ পিস</span>
-                    <span className="font-bold text-white">Bulk Rate (Best Price)</span>
+                    <span>ঢাকার বাইরে</span>
+                    <span className="font-bold text-white">৳১৩০</span>
                   </li>
                 </ul>
               </div>

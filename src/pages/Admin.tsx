@@ -35,8 +35,6 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [products, setProducts] = useState<any[]>([]);
-  const [wholesaleInquiries, setWholesaleInquiries] = useState<any[]>([]);
-  const [resellerInquiries, setResellerInquiries] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>({
     enabled: true,
@@ -83,16 +81,12 @@ export default function Admin() {
     setLoading(true);
     try {
       const headers = { 'x-admin-token': ADMIN_TOKEN };
-      const [pRes, wRes, rRes, oRes] = await Promise.all([
+      const [pRes, oRes] = await Promise.all([
         fetch('/api/admin/products', { headers }),
-        fetch('/api/admin/inquiries', { headers }),
-        fetch('/api/admin/reseller-inquiries', { headers }),
         fetch('/api/admin/orders', { headers })
       ]);
 
       if (pRes.ok) setProducts(await pRes.json());
-      if (wRes.ok) setWholesaleInquiries(await wRes.json());
-      if (rRes.ok) setResellerInquiries(await rRes.json());
       if (oRes.ok) setOrders(await oRes.json());
       
       const sRes = await fetch(`/api/announcement-bar?t=${Date.now()}`);
@@ -245,8 +239,6 @@ export default function Admin() {
             { id: 'dashboard', icon: <BarChart3 size={20} />, label: 'Dashboard' },
             { id: 'products', icon: <Package size={20} />, label: 'Products' },
             { id: 'orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
-            { id: 'wholesale', icon: <MessageSquare size={20} />, label: 'Wholesale Inquiries' },
-            { id: 'resellers', icon: <Users size={20} />, label: 'Reseller Inquiries' },
             { id: 'settings', icon: <Settings size={20} />, label: 'Settings' },
           ].map(item => (
             <button
@@ -281,8 +273,6 @@ export default function Admin() {
               {activeTab === 'dashboard' && 'Overview'}
               {activeTab === 'products' && 'Inventory Management'}
               {activeTab === 'orders' && 'Order Management'}
-              {activeTab === 'wholesale' && 'Wholesale Leads'}
-              {activeTab === 'resellers' && 'Reseller Applications'}
               {activeTab === 'settings' && 'Site Settings'}
             </h2>
             <p className="text-off-white/40 mt-2 bangla">সিস্টেমের বর্তমান অবস্থা এবং ডেটা ম্যানেজমেন্ট।</p>
@@ -299,8 +289,8 @@ export default function Admin() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <StatCard label="Total Products" value={products.length} icon={<Package />} color="blue" />
             <StatCard label="Pending Orders" value={orders.filter(o => o.status === 'Pending').length} icon={<ShoppingBag />} color="orange" />
-            <StatCard label="New Inquiries" value={wholesaleInquiries.filter(i => i.status === 'Pending').length} icon={<MessageSquare />} color="green" />
-            <StatCard label="Reseller Apps" value={resellerInquiries.filter(i => i.status === 'Pending').length} icon={<Users />} color="purple" />
+            <StatCard label="Total Orders" value={orders.length} icon={<CheckCircle />} color="green" />
+            <StatCard label="Total Revenue" value={`৳${orders.filter(o => o.status === 'Delivered').reduce((acc, o) => acc + o.total_amount, 0)}`} icon={<BarChart3 />} color="purple" />
           </div>
         )}
 
@@ -344,49 +334,56 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {products.map(product => (
-                    <tr key={product.id} className="hover:bg-white/5 transition-all group">
-                      <td className="p-6">
-                        <div className="flex items-center gap-4">
-                          <img src={product.image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
-                          <div>
-                            <div className="font-bold text-sm">{product.title}</div>
-                            <div className="text-[10px] text-off-white/30">{product.sku}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-6 text-sm text-off-white/60">{product.category}</td>
-                      <td className="p-6 font-bold text-royal-gold">৳{product.retail_price}</td>
-                      <td className="p-6 text-sm text-off-white/60">{product.wholesale_price_range}</td>
-                      <td className="p-6">
-                        <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${product.stock_count < 50 ? 'bg-red-500/20 text-red-500' : 'bg-green-500/20 text-green-500'}`}>
-                          {product.stock_count} in stock
-                        </span>
-                      </td>
-                      <td className="p-6">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-off-white/40">{product.status}</span>
-                      </td>
-                      <td className="p-6 text-right">
-                        <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                          <button 
-                            onClick={() => {
-                              setEditingProduct(product);
-                              setIsProductModalOpen(true);
-                            }}
-                            className="p-2 bg-blue-500/20 text-blue-500 rounded-lg hover:bg-blue-500 transition-all hover:text-white"
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteProduct(product.id)}
-                            className="p-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500 transition-all hover:text-white"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
+                  {products.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="p-12 text-center text-off-white/30 font-bold uppercase tracking-widest">
+                        No products found. Add your first product!
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    products.map(product => (
+                      <tr key={product.id} className="hover:bg-white/5 transition-all group">
+                        <td className="p-6">
+                          <div className="flex items-center gap-4">
+                            <img src={product.image_url} alt="" className="w-12 h-12 rounded-lg object-cover" />
+                            <div>
+                              <div className="font-bold text-sm">{product.title}</div>
+                              <div className="text-[10px] text-off-white/30">{product.sku}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-6 text-sm text-off-white/60">{product.category}</td>
+                        <td className="p-6 font-bold text-royal-gold">৳{product.retail_price}</td>
+                        <td className="p-6">
+                          <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${product.stock_count < 50 ? 'bg-red-500/20 text-red-500' : 'bg-green-500/20 text-green-500'}`}>
+                            {product.stock_count} in stock
+                          </span>
+                        </td>
+                        <td className="p-6">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-off-white/40">{product.status}</span>
+                        </td>
+                        <td className="p-6 text-right">
+                          <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all">
+                            <button 
+                              onClick={() => {
+                                setEditingProduct(product);
+                                setIsProductModalOpen(true);
+                              }}
+                              className="p-2 bg-blue-500/20 text-blue-500 rounded-lg hover:bg-blue-500 transition-all hover:text-white"
+                            >
+                              <Edit2 size={16} />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteProduct(product.id)}
+                              className="p-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500 transition-all hover:text-white"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -408,125 +405,57 @@ export default function Admin() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {orders.map(order => (
-                  <tr key={order.id} className="hover:bg-white/5 transition-all">
-                    <td className="p-6 font-mono text-xs text-royal-gold">#ORD-{order.id}</td>
-                    <td className="p-6">
-                      <div className="font-bold text-sm">{order.customer_name}</div>
-                      <div className="flex items-center gap-2">
-                        <div className="text-[10px] text-off-white/30">{order.customer_phone}</div>
-                        <button 
-                          onClick={() => copyToClipboard(order.customer_phone)}
-                          className="text-[8px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
-                        >
-                          Copy
-                        </button>
-                      </div>
-                    </td>
-                    <td className="p-6 text-sm text-off-white/60">{order.items.length} items</td>
-                    <td className="p-6 font-bold">৳{order.total_amount}</td>
-                    <td className="p-6">
-                      <select 
-                        value={order.status}
-                        onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
-                        className={`text-[10px] font-bold uppercase tracking-widest bg-transparent border-none outline-none cursor-pointer ${
-                          order.status === 'Pending' ? 'text-orange-500' : 
-                          order.status === 'Processing' ? 'text-blue-500' : 
-                          order.status === 'Shipped' ? 'text-purple-500' : 'text-green-500'
-                        }`}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Shipped">Shipped</option>
-                        <option value="Delivered">Delivered</option>
-                      </select>
-                    </td>
-                    <td className="p-6 text-xs text-off-white/30">{new Date(order.created_at).toLocaleDateString()}</td>
-                    <td className="p-6 text-right">
-                      <button className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all">
-                        <ChevronRight size={16} />
-                      </button>
+                {orders.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="p-12 text-center text-off-white/30 font-bold uppercase tracking-widest">
+                      No orders placed yet.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  orders.map(order => (
+                    <tr key={order.id} className="hover:bg-white/5 transition-all">
+                      <td className="p-6 font-mono text-xs text-royal-gold">#ORD-{order.id}</td>
+                      <td className="p-6">
+                        <div className="font-bold text-sm">{order.customer_name}</div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-[10px] text-off-white/30">{order.customer_phone}</div>
+                          <button 
+                            onClick={() => copyToClipboard(order.customer_phone)}
+                            className="text-[8px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
+                          >
+                            Copy
+                          </button>
+                        </div>
+                      </td>
+                      <td className="p-6 text-sm text-off-white/60">{order.items.length} items</td>
+                      <td className="p-6 font-bold">৳{order.total_amount}</td>
+                      <td className="p-6">
+                        <select 
+                          value={order.status}
+                          onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
+                          className={`text-[10px] font-bold uppercase tracking-widest bg-transparent border-none outline-none cursor-pointer ${
+                            order.status === 'Pending' ? 'text-orange-500' : 
+                            order.status === 'Processing' ? 'text-blue-500' : 
+                            order.status === 'Shipped' ? 'text-purple-500' : 'text-green-500'
+                          }`}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="Processing">Processing</option>
+                          <option value="Shipped">Shipped</option>
+                          <option value="Delivered">Delivered</option>
+                        </select>
+                      </td>
+                      <td className="p-6 text-xs text-off-white/30">{new Date(order.created_at).toLocaleDateString()}</td>
+                      <td className="p-6 text-right">
+                        <button className="p-2 bg-white/5 rounded-lg hover:bg-white/10 transition-all">
+                          <ChevronRight size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
-          </div>
-        )}
-
-        {activeTab === 'wholesale' && (
-          <div className="grid grid-cols-1 gap-6">
-            {wholesaleInquiries.map(inquiry => (
-              <div key={inquiry.id} className="bg-dark-card p-8 rounded-[2rem] border border-white/5 flex justify-between items-start">
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 bg-royal-gold/20 text-royal-gold text-[10px] font-bold rounded-full uppercase tracking-widest">Wholesale Inquiry</span>
-                    <span className="text-[10px] text-off-white/30">{new Date(inquiry.created_at).toLocaleString()}</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{inquiry.name}</h3>
-                  <div className="flex items-center gap-2 mb-4">
-                    <p className="text-royal-gold font-mono text-sm">{inquiry.phone}</p>
-                    <button 
-                      onClick={() => copyToClipboard(inquiry.phone)}
-                      className="text-[10px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Business:</span> {inquiry.business_name || 'N/A'}</p>
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Message:</span> {inquiry.message}</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-3 bg-green-500/20 text-green-500 rounded-xl hover:bg-green-500 hover:text-white transition-all">
-                    <CheckCircle size={20} />
-                  </button>
-                  <button className="p-3 bg-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                    <XCircle size={20} />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {activeTab === 'resellers' && (
-          <div className="grid grid-cols-1 gap-6">
-            {resellerInquiries.map(inquiry => (
-              <div key={inquiry.id} className="bg-dark-card p-8 rounded-[2rem] border border-white/5 flex justify-between items-start">
-                <div>
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 bg-blue-500/20 text-blue-500 text-[10px] font-bold rounded-full uppercase tracking-widest">Reseller App</span>
-                    <span className="text-[10px] text-off-white/30">{new Date(inquiry.created_at).toLocaleString()}</span>
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{inquiry.name}</h3>
-                  <div className="flex items-center gap-2 mb-4">
-                    <p className="text-royal-gold font-mono text-sm">{inquiry.phone}</p>
-                    <button 
-                      onClick={() => copyToClipboard(inquiry.phone)}
-                      className="text-[10px] uppercase tracking-widest text-off-white/20 hover:text-royal-gold transition-colors"
-                    >
-                      Copy
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2">
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Location:</span> {inquiry.location}</p>
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Type:</span> {inquiry.business_name}</p>
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Volume:</span> {inquiry.experience}</p>
-                    <p className="text-sm text-off-white/60"><span className="text-off-white/30 uppercase text-[10px] tracking-widest mr-2">Details:</span> {inquiry.message}</p>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-3 bg-green-500/20 text-green-500 rounded-xl hover:bg-green-500 hover:text-white transition-all">
-                    <CheckCircle size={20} />
-                  </button>
-                  <button className="p-3 bg-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all">
-                    <XCircle size={20} />
-                  </button>
-                </div>
-              </div>
-            ))}
           </div>
         )}
 
@@ -702,16 +631,6 @@ export default function Admin() {
                           className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
                           value={editingProduct.retail_price}
                           onChange={e => setEditingProduct({...editingProduct, retail_price: parseInt(e.target.value)})}
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Wholesale Range</label>
-                        <input 
-                          type="text" 
-                          placeholder="e.g. ৳200–৳350"
-                          className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
-                          value={editingProduct.wholesale_price_range}
-                          onChange={e => setEditingProduct({...editingProduct, wholesale_price_range: e.target.value})}
                         />
                       </div>
                     </div>

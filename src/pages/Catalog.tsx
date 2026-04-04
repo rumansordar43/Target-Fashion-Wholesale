@@ -3,7 +3,7 @@ import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 import { Filter, ChevronDown, LayoutGrid, List } from 'lucide-react';
 
-export default function Catalog({ openInquiry }: { openInquiry: (product?: Product) => void }) {
+export default function Catalog() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,7 +81,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
     <div className="py-24 px-4 max-w-7xl mx-auto">
       <div className="mb-16">
         <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase">Product Catalog</h1>
-        <p className="text-maroon font-semibold tracking-widest uppercase text-sm bangla">পাইকারি কালেকশন ব্রাউজ করুন</p>
+        <p className="text-maroon font-semibold tracking-widest uppercase text-sm bangla">আমাদের প্রিমিয়াম কালেকশন</p>
       </div>
 
       {/* Filters & Sort */}
@@ -168,7 +168,7 @@ export default function Catalog({ openInquiry }: { openInquiry: (product?: Produ
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
           {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onInquiry={openInquiry} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       )}
