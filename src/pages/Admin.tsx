@@ -35,6 +35,7 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
   const [products, setProducts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>({
     enabled: true,
@@ -44,7 +45,9 @@ export default function Admin() {
   });
   const [loading, setLoading] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
     const savedToken = localStorage.getItem('prism_admin_token');
@@ -81,13 +84,15 @@ export default function Admin() {
     setLoading(true);
     try {
       const headers = { 'x-admin-token': ADMIN_TOKEN };
-      const [pRes, oRes] = await Promise.all([
+      const [pRes, oRes, cRes] = await Promise.all([
         fetch('/api/admin/products', { headers }),
-        fetch('/api/admin/orders', { headers })
+        fetch('/api/admin/orders', { headers }),
+        fetch('/api/admin/categories', { headers })
       ]);
 
       if (pRes.ok) setProducts(await pRes.json());
       if (oRes.ok) setOrders(await oRes.json());
+      if (cRes.ok) setCategories(await cRes.json());
       
       const sRes = await fetch(`/api/announcement-bar?t=${Date.now()}`);
       if (sRes.ok) setSettings(await sRes.json());
@@ -152,6 +157,42 @@ export default function Admin() {
       }
     } catch (error) {
       console.error("Save product error:", error);
+    }
+  };
+
+  const handleSaveCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const method = editingCategory.id ? 'PUT' : 'POST';
+    const url = editingCategory.id ? `/api/admin/categories/${editingCategory.id}` : '/api/admin/categories';
+    
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { 
+          'Content-Type': 'application/json',
+          'x-admin-token': ADMIN_TOKEN 
+        },
+        body: JSON.stringify(editingCategory)
+      });
+      if (res.ok) {
+        setIsCategoryModalOpen(false);
+        fetchAllData();
+      }
+    } catch (error) {
+      console.error("Save category error:", error);
+    }
+  };
+
+  const handleDeleteCategory = async (id: number) => {
+    if (!confirm('Are you sure you want to delete this collection?')) return;
+    try {
+      const res = await fetch(`/api/admin/categories/${id}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-token': ADMIN_TOKEN }
+      });
+      if (res.ok) fetchAllData();
+    } catch (error) {
+      console.error("Delete category error:", error);
     }
   };
 
@@ -238,6 +279,7 @@ export default function Admin() {
           {[
             { id: 'dashboard', icon: <BarChart3 size={20} />, label: 'Dashboard' },
             { id: 'products', icon: <Package size={20} />, label: 'Products' },
+            { id: 'collections', icon: <Layers size={20} />, label: 'Collections' },
             { id: 'orders', icon: <ShoppingBag size={20} />, label: 'Orders' },
             { id: 'settings', icon: <Settings size={20} />, label: 'Settings' },
           ].map(item => (
@@ -272,6 +314,7 @@ export default function Admin() {
             <h2 className="text-3xl lg:text-5xl font-black uppercase tracking-tighter">
               {activeTab === 'dashboard' && 'Overview'}
               {activeTab === 'products' && 'Inventory Management'}
+              {activeTab === 'collections' && 'Collection Management'}
               {activeTab === 'orders' && 'Order Management'}
               {activeTab === 'settings' && 'Site Settings'}
             </h2>
@@ -386,6 +429,54 @@ export default function Admin() {
                   )}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'collections' && (
+          <div className="space-y-8">
+            <div className="flex justify-end">
+              <button 
+                onClick={() => {
+                  setEditingCategory({ title: '', slug: '', image_url: '', description: '' });
+                  setIsCategoryModalOpen(true);
+                }}
+                className="bg-royal-gold text-deep-black px-8 py-4 rounded-2xl font-black flex items-center gap-2 hover:bg-white transition-all uppercase tracking-widest"
+              >
+                <Plus size={20} /> Add Collection
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {categories.map(cat => (
+                <div key={cat.id} className="bg-dark-card rounded-[2.5rem] border border-white/5 overflow-hidden group">
+                  <div className="h-48 relative overflow-hidden">
+                    <img src={cat.image_url} alt={cat.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-deep-black to-transparent opacity-60" />
+                    <div className="absolute bottom-6 left-6">
+                      <h4 className="text-xl font-black uppercase tracking-tighter">{cat.title}</h4>
+                      <p className="text-[10px] text-off-white/40 font-mono uppercase tracking-widest">/{cat.slug}</p>
+                    </div>
+                  </div>
+                  <div className="p-6 flex justify-end gap-2">
+                    <button 
+                      onClick={() => {
+                        setEditingCategory(cat);
+                        setIsCategoryModalOpen(true);
+                      }}
+                      className="p-3 bg-blue-500/20 text-blue-500 rounded-xl hover:bg-blue-500 hover:text-white transition-all"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button 
+                      onClick={() => handleDeleteCategory(cat.id)}
+                      className="p-3 bg-red-500/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -561,6 +652,86 @@ export default function Admin() {
         )}
       </div>
 
+      {/* Collection Modal */}
+      <AnimatePresence>
+        {isCategoryModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsCategoryModalOpen(false)}
+              className="absolute inset-0 bg-deep-black/90 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative bg-dark-card border border-white/10 rounded-[3rem] w-full max-w-2xl shadow-2xl"
+            >
+              <div className="p-12">
+                <div className="flex justify-between items-center mb-12">
+                  <h3 className="text-3xl font-black uppercase tracking-tighter">
+                    {editingCategory.id ? 'Edit Collection' : 'Add New Collection'}
+                  </h3>
+                  <button onClick={() => setIsCategoryModalOpen(false)} className="p-4 bg-white/5 rounded-2xl hover:bg-white/10 transition-all">
+                    <X size={24} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleSaveCategory} className="space-y-6">
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Collection Title</label>
+                    <input 
+                      type="text" 
+                      required
+                      className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                      value={editingCategory.title}
+                      onChange={e => setEditingCategory({...editingCategory, title: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Slug (URL path)</label>
+                    <input 
+                      type="text" 
+                      required
+                      className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                      value={editingCategory.slug}
+                      onChange={e => setEditingCategory({...editingCategory, slug: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Cover Image URL</label>
+                    <input 
+                      type="url" 
+                      required
+                      className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all"
+                      value={editingCategory.image_url}
+                      onChange={e => setEditingCategory({...editingCategory, image_url: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] uppercase tracking-widest text-off-white/40 mb-2 ml-2 font-bold">Description (Optional)</label>
+                    <textarea 
+                      rows={3}
+                      className="w-full bg-deep-black border border-white/10 rounded-2xl p-4 outline-none focus:border-royal-gold transition-all resize-none"
+                      value={editingCategory.description || ''}
+                      onChange={e => setEditingCategory({...editingCategory, description: e.target.value})}
+                    />
+                  </div>
+
+                  <div className="pt-8">
+                    <button className="w-full bg-royal-gold text-text-primary py-6 rounded-2xl font-black hover:bg-text-primary hover:text-deep-black transition-all uppercase tracking-widest flex items-center justify-center gap-3">
+                      <Save size={24} /> Save Collection
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
       {/* Product Modal */}
       <AnimatePresence>
         {isProductModalOpen && (
@@ -683,12 +854,9 @@ export default function Admin() {
                         value={editingProduct.category}
                         onChange={e => setEditingProduct({...editingProduct, category: e.target.value})}
                       >
-                        <option value="Solid">Solid</option>
-                        <option value="Graphic">Graphic</option>
-                        <option value="Polo">Polo</option>
-                        <option value="Oversized">Oversized</option>
-                        <option value="Full Sleeve">Full Sleeve</option>
-                        <option value="Embroidered">Embroidered</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.title}>{cat.title}</option>
+                        ))}
                       </select>
                     </div>
                     <div>

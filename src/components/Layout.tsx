@@ -25,6 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [categories, setCategories] = useState<any[]>([]);
   const [announcement, setAnnouncement] = useState<{ enabled: boolean, text: string, backgroundColor: string, textColor: string }>({
     enabled: false,
     text: "",
@@ -42,6 +43,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     };
 
     fetchAnnouncement();
+
+    const fetchCategories = () => {
+      fetch('/api/categories')
+        .then(res => res.json())
+        .then(data => setCategories(data))
+        .catch(err => console.error('Failed to fetch categories:', err));
+    };
+
+    fetchCategories();
   }, [location.pathname]);
   const { totalItems } = useCart();
 
@@ -65,15 +75,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Offers', path: '/offers' },
     { name: 'কীভাবে অর্ডার করবেন', path: '/how-to-order' },
     { name: 'About Us', path: '/about' },
-  ];
-
-  const categories = [
-    { name: 'Solid', path: '/category/solid' },
-    { name: 'Graphic', path: '/category/graphic' },
-    { name: 'Polo', path: '/category/polo' },
-    { name: 'Oversized', path: '/category/oversized' },
-    { name: 'Full Sleeve', path: '/category/full-sleeve' },
-    { name: 'Embroidered', path: '/category/embroidered' },
   ];
 
   return (
@@ -133,11 +134,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     >
                       {categories.map(cat => (
                         <Link 
-                          key={cat.path} 
-                          to={cat.path} 
+                          key={cat.id} 
+                          to={`/category/${cat.slug}`} 
                           className="block px-6 py-2 hover:bg-royal-gold hover:text-deep-black transition-colors text-text-primary"
                         >
-                          {cat.name}
+                          {cat.title}
                         </Link>
                       ))}
                       <div className="border-t border-border-subtle mt-2 pt-2">
@@ -227,12 +228,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <div className="grid grid-cols-1 gap-5">
                     {categories.map(cat => (
                       <Link 
-                        key={cat.path} 
-                        to={cat.path} 
+                        key={cat.id} 
+                        to={`/category/${cat.slug}`} 
                         onClick={() => setIsMenuOpen(false)} 
-                        className={`text-lg ${location.pathname === cat.path ? 'text-royal-gold' : ''}`}
+                        className={`text-lg ${location.pathname === `/category/${cat.slug}` ? 'text-royal-gold' : ''}`}
                       >
-                        {cat.name}
+                        {cat.title}
                       </Link>
                     ))}
                     <Link to="/catalog" onClick={() => setIsMenuOpen(false)} className="text-lg font-bold text-maroon">View All Products</Link>

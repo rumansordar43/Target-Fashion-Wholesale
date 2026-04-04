@@ -4,32 +4,44 @@ import { Product } from '../types';
 import ProductCard from '../components/ProductCard';
 
 export default function Category() {
-  const { name } = useParams<{ name: string }>();
+  const { name: slug } = useParams<{ name: string }>();
   const [products, setProducts] = useState<Product[]>([]);
+  const [category, setCategory] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Convert slug back to display name
-  const categoryName = name?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
   useEffect(() => {
-    fetch(`/api/categories/${categoryName}`)
-      .then(res => res.json())
-      .then(data => {
-        setProducts(data);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // Fetch category details to get the correct title
+        const cRes = await fetch('/api/categories');
+        const categories = await cRes.json();
+        const currentCat = categories.find((c: any) => c.slug === slug);
+        
+        if (currentCat) {
+          setCategory(currentCat);
+          const pRes = await fetch(`/api/categories/${currentCat.title}`);
+          const pData = await pRes.json();
+          setProducts(pData);
+        }
         setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching category products:', err);
+      } catch (err) {
+        console.error('Error fetching category data:', err);
         setLoading(false);
-      });
-  }, [categoryName]);
+      }
+    };
+
+    fetchData();
+  }, [slug]);
 
   if (loading) return <div className="h-[80vh] flex items-center justify-center text-royal-gold font-bold">Loading...</div>;
+
+  const categoryTitle = category ? category.title : slug?.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   return (
     <div className="py-24 px-4 max-w-7xl mx-auto">
       <div className="mb-16">
-        <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase">{categoryName}</h1>
+        <h1 className="text-5xl md:text-7xl font-black mb-4 uppercase">{categoryTitle}</h1>
         <p className="text-royal-gold font-semibold tracking-widest uppercase text-sm bangla">কালেকশন</p>
       </div>
 

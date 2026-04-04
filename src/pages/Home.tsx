@@ -19,21 +19,19 @@ import { Product } from '../types';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     fetch('/api/products')
       .then(res => res.json())
       .then(data => setFeaturedProducts(data.slice(0, 3)))
       .catch(err => console.error(err));
-  }, []);
 
-  const categories = [
-    { name: 'Solid', slug: 'solid', image: 'https://picsum.photos/seed/drop-shoulder/600/800', price: '350' },
-    { name: 'Graphic', slug: 'graphic', image: 'https://picsum.photos/seed/graphic/600/800', price: '400' },
-    { name: 'Polo', slug: 'polo', image: 'https://picsum.photos/seed/polo/600/800', price: '500' },
-    { name: 'Oversized', slug: 'oversized', image: 'https://picsum.photos/seed/oversized/600/800', price: '380' },
-    { name: 'Full Sleeve', slug: 'full-sleeve', image: 'https://picsum.photos/seed/full-sleeve/600/800', price: '450' },
-  ];
+    fetch('/api/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error(err));
+  }, []);
 
   return (
     <div className="overflow-hidden">
@@ -169,16 +167,16 @@ export default function Home() {
               <div key={i} className="group bg-deep-black rounded-[2rem] overflow-hidden border border-border-subtle">
                 <div className="aspect-[3/4] overflow-hidden relative">
                   <img 
-                    src={cat.image} 
-                    alt={cat.name} 
+                    src={cat.image_url} 
+                    alt={cat.title} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-deep-black via-transparent to-transparent opacity-60"></div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold mb-2 text-sm text-text-primary">{cat.name}</h3>
-                  <p className="text-royal-gold font-black mb-4">৳{cat.price}</p>
+                  <h3 className="font-bold mb-2 text-sm text-text-primary uppercase tracking-widest">{cat.title}</h3>
+                  <p className="text-royal-gold font-black mb-4">Premium Collection</p>
                   <Link 
                     to={`/category/${cat.slug}`}
                     className="block w-full bg-border-subtle hover:bg-royal-gold hover:text-deep-black text-center py-3 rounded-xl text-xs font-bold transition-all bangla text-text-primary"

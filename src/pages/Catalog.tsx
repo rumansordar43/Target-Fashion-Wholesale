@@ -6,6 +6,7 @@ import { Filter, ChevronDown, LayoutGrid, List } from 'lucide-react';
 export default function Catalog() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
   const [loading, setLoading] = useState(true);
   
   // Filters
@@ -14,7 +15,6 @@ export default function Catalog() {
   const [color, setColor] = useState('All');
   const [sortBy, setSortBy] = useState('Newest First');
 
-  const categories = ['All', 'Solid', 'Graphic', 'Embroidered', 'Oversized', 'Polo', 'Full Sleeve'];
   const sizes = ['All', 'S', 'M', 'L', 'XL', 'XXL'];
   const colors = [
     { name: 'All', hex: 'transparent' },
@@ -30,17 +30,27 @@ export default function Catalog() {
   const sortOptions = ['Newest First', 'Most Popular', 'Price Low→High', 'Price High→Low'];
 
   useEffect(() => {
-    fetch('/api/products')
-      .then(res => res.json())
-      .then(data => {
-        setProducts(data);
-        setFilteredProducts(data);
+    const fetchData = async () => {
+      try {
+        const [pRes, cRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/categories')
+        ]);
+        
+        const pData = await pRes.json();
+        const cData = await cRes.json();
+        
+        setProducts(pData);
+        setFilteredProducts(pData);
+        setCategories(['All', ...cData.map((c: any) => c.title)]);
         setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching products:', err);
+      } catch (err) {
+        console.error('Error fetching data:', err);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {

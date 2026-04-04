@@ -16,7 +16,6 @@ db.exec(`
     slug TEXT UNIQUE NOT NULL,
     category TEXT NOT NULL,
     retail_price INTEGER NOT NULL,
-    wholesale_price_range TEXT,
     image_url TEXT NOT NULL,
     image_url_2 TEXT,
     gallery TEXT,
@@ -27,10 +26,18 @@ db.exec(`
     sizes TEXT,
     colors TEXT,
     stock_count INTEGER DEFAULT 0,
-    moq INTEGER DEFAULT 12,
     tags TEXT,
     status TEXT DEFAULT 'Active',
     is_popular INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS categories (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    image_url TEXT NOT NULL,
+    description TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
   );
 
@@ -98,6 +105,22 @@ const isAdmin = (req: express.Request, res: express.Response, next: express.Next
 
 // Seed initial data if empty
 const productCount = db.prepare("SELECT COUNT(*) as count FROM products").get() as { count: number };
+const categoryCount = db.prepare("SELECT COUNT(*) as count FROM categories").get() as { count: number };
+
+if (categoryCount.count === 0) {
+  const categories = [
+    { title: "Solid", slug: "solid", image_url: "https://picsum.photos/seed/solid/800/1000" },
+    { title: "Graphic", slug: "graphic", image_url: "https://picsum.photos/seed/graphic/800/1000" },
+    { title: "Polo", slug: "polo", image_url: "https://picsum.photos/seed/polo/800/1000" },
+    { title: "Oversized", slug: "oversized", image_url: "https://picsum.photos/seed/oversized/800/1000" },
+    { title: "Full Sleeve", slug: "full-sleeve", image_url: "https://picsum.photos/seed/fullsleeve/800/1000" },
+    { title: "Embroidered", slug: "embroidered", image_url: "https://picsum.photos/seed/embroidered/800/1000" }
+  ];
+
+  const insertCategory = db.prepare("INSERT INTO categories (title, slug, image_url) VALUES (?, ?, ?)");
+  categories.forEach(cat => insertCategory.run(cat.title, cat.slug, cat.image_url));
+}
+
 if (productCount.count === 0) {
   const insert = db.prepare(`
     INSERT INTO products (
@@ -246,6 +269,11 @@ async function startServer() {
   app.use(express.json());
 
   // Public API Routes
+  app.get("/api/categories", (req, res) => {
+    const categories = db.prepare("SELECT * FROM categories ORDER BY created_at DESC").all();
+    res.json(categories);
+  });
+
   app.get("/api/products", (req, res) => {
     const products = db.prepare("SELECT id, title, sku, slug, category, retail_price, image_url, image_url_2, gallery, description, badge, fabric, gsm, sizes, colors, stock_count, tags, status, is_popular FROM products").all();
     const parsedProducts = products.map((p: any) => ({
@@ -341,6 +369,37 @@ async function startServer() {
   });
 
   // Admin API Routes
+  app.get("/api/admin/categories", isAdmin, (req, res) => {
+    const categories = db.prepare("SELECT * FROM categories ORDER BY created_at DESC").all();
+    res.json(categories);
+  });
+
+  app.post("/api/admin/categories", isAdmin, (req, res) => {
+    const { title, slug, image_url, description } = req.body;
+    try {
+      const stmt = db.prepare("INSERT INTO categories (title, slug, image_url, description) VALUES (?, ?, ?, ?)");
+      const result = stmt.run(title, slug, image_url, description);
+      res.status(201).json({ success: true, id: result.lastInsertRowid });
+    } catch (error) {
+      res.status(400).json({ success: false, error: "Slug must be unique" });
+    }
+  });
+
+  app.put("/api/admin/categories/:id", isAdmin, (req, res) => {
+    const { title, slug, image_url, description } = req.body;
+    try {
+      db.prepare("UPDATE categories SET title = ?, slug = ?, image_url = ?, description = ? WHERE id = ?").run(title, slug, image_url, description, req.params.id);
+      res.json({ success: true });
+    } catch (error) {
+      res.status(400).json({ success: false, error: "Failed to update category" });
+    }
+  });
+
+  app.delete("/api/admin/categories/:id", isAdmin, (req, res) => {
+    db.prepare("DELETE FROM categories WHERE id = ?").run(req.params.id);
+    res.json({ success: true });
+  });
+
   app.get("/api/admin/inquiries", isAdmin, (req, res) => {
     const inquiries = db.prepare("SELECT * FROM inquiries ORDER BY created_at DESC").all();
     res.json(inquiries);
