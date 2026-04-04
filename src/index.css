@@ -6,6 +6,8 @@
   --color-steel-blue: #1E3A8A;
   --color-maroon: #800000;
   --color-off-white: var(--text-primary);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
   --color-dark-card: var(--bg-secondary);
   --color-border-subtle: var(--border-color);
 
@@ -16,19 +18,19 @@
 
 @layer base {
   :root {
-    --bg-primary: #080808;
-    --bg-secondary: #161616;
-    --text-primary: #F5F5F0;
-    --text-secondary: rgba(245, 245, 240, 0.6);
-    --border-color: rgba(255, 255, 255, 0.05);
-  }
-
-  :root.light {
     --bg-primary: #F5F5F0;
     --bg-secondary: #FFFFFF;
     --text-primary: #080808;
     --text-secondary: rgba(8, 8, 8, 0.6);
     --border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  :root.dark {
+    --bg-primary: #080808;
+    --bg-secondary: #161616;
+    --text-primary: #F5F5F0;
+    --text-secondary: rgba(245, 245, 240, 0.6);
+    --border-color: rgba(255, 255, 255, 0.05);
   }
 
   body {

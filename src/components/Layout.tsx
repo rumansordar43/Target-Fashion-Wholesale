@@ -24,23 +24,22 @@ import { LogoName } from './Logo';
 export default function Layout({ children, openInquiry }: { children: React.ReactNode, openInquiry: () => void }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const location = useLocation();
   const { totalItems } = useCart();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light';
-    if (savedTheme) {
-      setTheme(savedTheme);
-      document.documentElement.classList.toggle('light', savedTheme === 'light');
-    }
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null;
+    const initialTheme = savedTheme || 'light';
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
   }, []);
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('light', newTheme === 'light');
+    document.documentElement.classList.toggle('dark', newTheme === 'dark');
   };
 
   const navLinks = [
@@ -134,19 +133,19 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             </div>
 
             {/* Right: Icons & Button */}
-            <div className="flex items-center gap-2 sm:gap-4">
+            <div className="flex items-center gap-1 sm:gap-4">
               <button 
                 onClick={toggleTheme}
                 className="p-2 sm:p-3 rounded-full hover:bg-border-subtle transition-colors text-text-primary hover:text-maroon"
                 title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
               >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {theme === 'dark' ? <Sun className="w-5 h-5 sm:w-6 sm:h-6" /> : <Moon className="w-5 h-5 sm:w-6 sm:h-6" />}
               </button>
               <button className="text-text-primary hover:text-maroon transition-colors hidden sm:block p-2">
                 <Search size={20} />
               </button>
               <Link to="/cart" className="text-text-primary hover:text-maroon transition-colors relative p-2">
-                <ShoppingBag size={20} />
+                <ShoppingBag size={20} className="sm:w-6 sm:h-6" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 bg-maroon text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-deep-black">
                     {totalItems}
@@ -155,15 +154,16 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
               </Link>
               <Link 
                 to="/reseller"
-                className="hidden sm:flex items-center gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-6 py-3 rounded-full font-bold text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20"
+                className="hidden xl:flex items-center gap-2 bg-royal-gold hover:bg-royal-gold/90 text-deep-black px-6 py-3 rounded-full font-bold text-sm transition-all transform hover:scale-105 active:scale-95 shadow-lg shadow-royal-gold/20"
               >
                 RESELLER হন
               </Link>
               <button 
                 onClick={() => setIsMenuOpen(true)}
-                className="lg:hidden p-2 text-text-primary"
+                className="lg:hidden p-2 text-text-primary hover:text-maroon transition-colors"
+                aria-label="Open Menu"
               >
-                <Menu size={24} />
+                <Menu className="w-7 h-7 sm:w-8 sm:h-8" />
               </button>
             </div>
           </div>
@@ -177,28 +177,73 @@ export default function Layout({ children, openInquiry }: { children: React.Reac
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
-            className="fixed inset-0 z-[60] bg-deep-black pt-36 px-6 lg:hidden"
+            className="fixed inset-0 z-[60] bg-deep-black lg:hidden overflow-y-auto"
           >
-            <div className="flex flex-col gap-6 text-xl font-cinzel text-center">
-              <Link to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-              <div className="py-2 border-y border-white/5">
-                <p className="text-xs text-royal-gold uppercase tracking-widest mb-4">Categories</p>
-                <div className="grid grid-cols-1 gap-4">
-                  {categories.map(cat => (
-                    <Link key={cat.path} to={cat.path} onClick={() => setIsMenuOpen(false)} className="text-lg">{cat.name}</Link>
-                  ))}
+            <div className="p-6 flex flex-col min-h-screen">
+              <div className="flex justify-between items-center mb-12">
+                <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-1">
+                  <img 
+                    src="https://lh3.googleusercontent.com/d/1cEF5GtBERApKY0qBJPz1JNuFgUk86URX" 
+                    alt="Logo" 
+                    className="w-10 h-10 object-contain" 
+                    referrerPolicy="no-referrer"
+                  />
+                  <LogoName className="scale-75 origin-left" />
+                </Link>
+                <button 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 text-text-primary hover:text-maroon transition-colors"
+                >
+                  <X size={32} />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-6 text-xl font-cinzel text-center mb-12">
+                <Link to="/" onClick={() => setIsMenuOpen(false)} className={location.pathname === '/' ? 'text-royal-gold' : ''}>Home</Link>
+                
+                <div className="py-4 border-y border-border-subtle">
+                  <p className="text-xs text-royal-gold uppercase tracking-widest mb-6 font-bold">Categories</p>
+                  <div className="grid grid-cols-1 gap-5">
+                    {categories.map(cat => (
+                      <Link 
+                        key={cat.path} 
+                        to={cat.path} 
+                        onClick={() => setIsMenuOpen(false)} 
+                        className={`text-lg ${location.pathname === cat.path ? 'text-royal-gold' : ''}`}
+                      >
+                        {cat.name}
+                      </Link>
+                    ))}
+                    <Link to="/catalog" onClick={() => setIsMenuOpen(false)} className="text-lg font-bold text-maroon">View All Products</Link>
+                  </div>
+                </div>
+
+                {navLinks.slice(1).map(link => (
+                  <Link 
+                    key={link.path} 
+                    to={link.path} 
+                    onClick={() => setIsMenuOpen(false)}
+                    className={location.pathname === link.path ? 'text-royal-gold' : ''}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-auto pt-8 border-t border-border-subtle flex flex-col gap-4">
+                <Link 
+                  to="/reseller" 
+                  onClick={() => setIsMenuOpen(false)}
+                  className="bg-royal-gold text-deep-black py-4 rounded-xl font-bold uppercase tracking-widest text-center shadow-lg"
+                >
+                  Reseller হন
+                </Link>
+                <div className="flex justify-center gap-6 py-4">
+                  <a href="https://www.facebook.com/share/1XSmanaXQk/" target="_blank" className="text-text-primary hover:text-royal-gold"><Facebook size={24} /></a>
+                  <a href="https://wa.me/8801856078978" target="_blank" className="text-text-primary hover:text-green-500"><MessageSquare size={24} /></a>
+                  <a href="mailto:info@prismkicks.com" className="text-text-primary hover:text-steel-blue"><Send size={24} /></a>
                 </div>
               </div>
-              {navLinks.slice(1).map(link => (
-                <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)}>{link.name}</Link>
-              ))}
-              <Link 
-                to="/reseller" 
-                onClick={() => setIsMenuOpen(false)}
-                className="bg-royal-gold text-deep-black py-4 rounded-xl font-bold uppercase tracking-widest"
-              >
-                Reseller হন
-              </Link>
             </div>
           </motion.div>
         )}
